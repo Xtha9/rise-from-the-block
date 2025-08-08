@@ -19,6 +19,7 @@ function signup(username, password, email) {
   };
   users.push(newUser);
   saveUsers();
+  currentUser = newUser;
   localStorage.setItem("currentUser", JSON.stringify(newUser));
   showHomePage();
   return true;
@@ -39,7 +40,9 @@ function logout() {
   currentUser = null;
   localStorage.removeItem("currentUser");
   document.getElementById("homePage").style.display = "none";
-  document.getElementById("authContainer").style.display = "block";
+  document.getElementById("authContainer").style.display = "flex";
+  document.querySelector(".tab-content.active").classList.remove("active");
+  document.getElementById("loginTab").classList.add("active");
 }
 
 function updateAvatarImage(file) {
@@ -73,5 +76,7 @@ function showHomePage() {
 window.addEventListener("DOMContentLoaded", () => {
   if (currentUser) {
     showHomePage();
+  } else {
+    document.getElementById("authContainer").style.display = "flex";
   }
 });
