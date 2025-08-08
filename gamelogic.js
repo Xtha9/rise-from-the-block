@@ -1,112 +1,72 @@
-// Helper: get all users from storage
-function getUsers() {
-  return JSON.parse(localStorage.getItem("users")) || {};
-}
+// Game logic for Rise from the Block
+const loginForm = document.getElementById("login-form");
+const signupForm = document.getElementById("signup-form");
+const gameUI = document.getElementById("game-ui");
+const userDisplay = document.getElementById("user-display");
+const avatarIcon = document.getElementById("avatarIcon");
+const avatarUpload = document.getElementById("avatarUpload");
 
-// Helper: save all users to storage
-function saveUsers(users) {
+let users = JSON.parse(localStorage.getItem("users")) || {};
+let loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+
+function saveUsers() {
   localStorage.setItem("users", JSON.stringify(users));
 }
 
-// Helper: get device ID (stored locally for this browser)
-function getDeviceId() {
-  let id = localStorage.getItem("deviceId");
-  if (!id) {
-    id = "device-" + Math.random().toString(36).substr(2, 9);
-    localStorage.setItem("deviceId", id);
-  }
-  return id;
+function updateAvatarDisplay(user) {
+  const defaultAvatar = 'https://abs.twimg.com/sticky/default_profile_images/default_profile_400x400.png';
+  avatarIcon.style.backgroundImage = `url('${user.avatar || defaultAvatar}')`;
 }
 
-// Only reset owner account if it doesn't exist
-const defaultOwner = {
-  username: "X",
-  password: "SmileKid18$",
-  email: "sicrug@gmail.com",
-  role: "owner",
-  deviceId: getDeviceId()
-};
-
-const allUsers = getUsers();
-if (!allUsers["X"]) {
-  allUsers["X"] = defaultOwner;
-  saveUsers(allUsers);
+function showGameUI(user) {
+  loginForm.style.display = "none";
+  signupForm.style.display = "none";
+  gameUI.style.display = "block";
+  document.getElementById("account-settings").style.display = "none";
+  userDisplay.textContent = "";
+  updateAvatarDisplay(user);
 }
 
-function login(username, password) {
-  const users = getUsers();
-  const user = users[username];
-  if (user && user.password === password) {
-    localStorage.setItem("loggedInUser", username);
-    updateUI();
-  } else {
-    alert("Invalid username or password.");
-  }
+if (loggedInUser && users[loggedInUser.username]) {
+  showGameUI(users[loggedInUser.username]);
 }
 
-function signup(username, password, email) {
-  if (!username || !password || !email) {
-    alert("Please fill out all fields.");
-    return;
-  }
-
-  if (username.length < 1 || username.length > 40) {
-    alert("Username must be between 1 and 40 characters.");
-    return;
-  }
-
-  const users = getUsers();
-  if (users[username]) {
-    alert("Username already exists.");
-    return;
-  }
-
-  const newUser = {
-    username,
-    password,
-    email,
-    deviceId: getDeviceId()
-  };
-
-  users[username] = newUser;
-  saveUsers(users);
-  localStorage.setItem("loggedInUser", username);
-  updateUI();
-}
-
-function logout() {
-  localStorage.removeItem("loggedInUser");
-  updateUI();
-}
-
-function updateUI() {
-  const currentUser = localStorage.getItem("loggedInUser");
-  document.getElementById("login-form").style.display = currentUser ? "none" : "block";
-  document.getElementById("signup-form").style.display = currentUser ? "none" : "block";
-  document.getElementById("game-ui").style.display = currentUser ? "block" : "none";
-
-  const display = document.getElementById("user-display");
-  if (currentUser) {
-    display.innerText = ""; // Removed verbose "Logged in as"
-  } else {
-    display.innerText = "";
-  }
-}
-
-document.getElementById("loginBtn").onclick = () => {
-  const username = document.getElementById("login-username").value.trim();
+document.getElementById("loginBtn").addEventListener("click", () => {
+  const username = document.getElementById("login-username").value;
   const password = document.getElementById("login-password").value;
-  login(username, password);
-};
+  if (users[username] && users[username].password === password) {
+    loggedInUser = { username };
+    localStorage.setItem("loggedInUser", JSON.stringify(loggedInUser));
+    showGameUI(users[username]);
+  } else {
+    alert("Invalid login credentials");
+  }
+});
 
-document.getElementById("signupBtn").onclick = () => {
-  const username = document.getElementById("signup-username").value.trim();
+document.getElementById("signupBtn").addEventListener("click", () => {
+  const username = document.getElementById("signup-username").value;
   const password = document.getElementById("signup-password").value;
-  const email = document.getElementById("signup-email").value.trim();
-  signup(username, password, email);
-};
+  const email = document.getElementById("signup-email").value;
+  if (!users[username]) {
+    users[username] = { username, password, email, avatar: "" };
+    saveUsers();
+    alert("Signup successful. Please log in.");
+  } else {
+    alert("Username already exists");
+  }
+});
 
-window.onload = () => {
-  getDeviceId();
-  updateUI();
-};
+avatarUpload.addEventListener("change", function () {
+  const file = this.files[0];
+  if (file && loggedInUser) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      const imageUrl = e.target.result;
+      users[loggedInUser.username].avatar = imageUrl;
+      saveUsers();
+      updateAvatarDisplay(users[loggedInUser.username]);
+      alert("Avatar uploaded successfully!");
+    };
+    reader.readAsDataURL(file);
+  }
+});
