@@ -6,86 +6,62 @@
   <title>Rise from the Block</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #000;
-      color: #f0f0f0;
       margin: 0;
-      padding: 20px;
-    }
-
-    #login-form, #signup-form {
-      margin-bottom: 20px;
-    }
-
-    input {
-      margin: 5px 0;
-      padding: 8px;
-      width: 250px;
-      display: block;
-      background-color: #111;
-      border: 1px solid #444;
-      color: #fff;
-    }
-
-    button {
-      margin-top: 5px;
-      padding: 10px 20px;
-      background-color: #333;
+      background: black;
       color: white;
-      border: none;
+      font-family: Arial, sans-serif;
+    }
+
+    #logout-container {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+    }
+
+    #logoutBtn {
+      padding: 6px 12px;
+      font-weight: bold;
       cursor: pointer;
     }
 
     #game-ui {
-      display: none;
-      margin-top: 30px;
-    }
-
-    .section {
-      margin-bottom: 20px;
-      padding: 10px;
+      padding: 20px;
+      max-width: 600px;
+      margin: 80px auto 0 auto;
       background: #111;
-      border: 1px solid #222;
-      border-radius: 5px;
-    }
-
-    #user-display {
-      margin-bottom: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #333;
     }
   </style>
 </head>
 <body>
-  <h1>Rise from the Block</h1>
 
-  <div id="user-display"></div>
-
-  <!-- LOGIN FORM -->
+  <!-- Login Form -->
   <div id="login-form">
-    <h2>Login</h2>
-    <input id="login-username" type="text" placeholder="Username" />
-    <input id="login-password" type="password" placeholder="Password" />
-    <button id="loginBtn">Login</button>
+    <input type="text" id="login-username" placeholder="Username" />
+    <input type="password" id="login-password" placeholder="Password" />
+    <button id="loginBtn">Log In</button>
   </div>
 
-  <!-- SIGNUP FORM -->
+  <!-- Signup Form -->
   <div id="signup-form">
-    <h2>Sign Up</h2>
-    <input id="signup-username" type="text" placeholder="Username (1-40 characters)" />
-    <input id="signup-password" type="password" placeholder="Password" />
-    <input id="signup-email" type="email" placeholder="Email" />
+    <input type="text" id="signup-username" placeholder="Username (1–40 chars)" />
+    <input type="email" id="signup-email" placeholder="Email" />
+    <input type="password" id="signup-password" placeholder="Password" />
     <button id="signupBtn">Sign Up</button>
   </div>
 
-  <!-- GAME UI (Black screen placeholder) -->
-  <div id="game-ui">
-    <div class="section">
-      <h2>Welcome to the Game</h2>
-      <p>This is your game screen. You’re logged in!</p>
-      <button onclick="logout()">Logout</button>
+  <!-- Game UI -->
+  <div id="game-ui" style="display: none;">
+    <div id="logout-container">
+      <button id="logoutBtn" onclick="logout()">Log Out</button>
     </div>
+
+    <h2 id="user-display"></h2>
+    <p>Welcome to Rise from the Block!</p>
+    <!-- More game UI goes here -->
   </div>
 
-  <!-- Load Game Logic -->
   <script src="GameLogic.js"></script>
 </body>
 </html>
