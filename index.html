@@ -64,6 +64,13 @@
     .hidden {
       display: none;
     }
+
+    .taken {
+      color: red;
+    }
+    .available {
+      color: green;
+    }
   </style>
 </head>
 <body>
@@ -79,7 +86,9 @@
   <main>
     <div id="authSection">
       <h3>Signup / Login</h3>
-      <input type="text" id="username" placeholder="Username" />
+      <input type="email" id="email" placeholder="Email" />
+      <input type="text" id="username" placeholder="Username" oninput="checkUsernameAvailability()"/>
+      <span id="usernameStatus"></span><br />
       <input type="password" id="password" placeholder="Password" />
       <br />
       <button onclick="handleSignup()">Sign Up</button>
@@ -109,9 +118,24 @@
       avatarMenu.style.display = avatarMenu.style.display === "block" ? "none" : "block";
     });
 
+    function checkUsernameAvailability() {
+      const username = document.getElementById("username").value;
+      const status = document.getElementById("usernameStatus");
+      const exists = users.some(u => u.username === username);
+      if (exists) {
+        status.textContent = "Username taken";
+        status.className = "taken";
+      } else {
+        status.textContent = "Username available";
+        status.className = "available";
+      }
+    }
+
     function handleSignup() {
+      const email = document.getElementById("email").value;
       const username = document.getElementById("username").value;
       const password = document.getElementById("password").value;
+      if (!email || !username || !password) return alert("All fields required");
       if (signup(username, password)) {
         alert("Signup successful!");
         document.getElementById("authSection").classList.add("hidden");
