@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Rise From the Block</title>
+  <meta charset="UTF-8">
+  <title>Rise from the Block</title>
   <style>
     body {
       margin: 0;
@@ -11,53 +10,67 @@
       background-color: black;
       color: white;
     }
-    #login-form, #signup-form {
-      margin: 20px;
-    }
+
     #game-ui {
       display: none;
       padding: 20px;
     }
-    #logoutBtn {
+
+    .auth-form {
+      margin: 20px;
+    }
+
+    .hud {
       position: absolute;
       top: 10px;
       right: 10px;
-      padding: 10px 15px;
-      background-color: red;
-      border: none;
-      color: white;
-      cursor: pointer;
+    }
+
+    button {
+      padding: 5px 10px;
+      font-size: 16px;
+    }
+
+    .centered {
+      text-align: center;
+      padding-top: 40px;
+    }
+
+    input {
+      display: block;
+      margin: 8px 0;
+      padding: 8px;
     }
   </style>
 </head>
 <body>
-  <h1>Rise From the Block</h1>
-
-  <!-- Login Form -->
-  <div id="login-form">
+  <div id="login-form" class="auth-form">
     <h2>Login</h2>
-    <input type="text" id="login-username" placeholder="Username"><br>
-    <input type="password" id="login-password" placeholder="Password"><br>
-    <button id="loginBtn">Log In</button>
+    <input type="text" id="login-username" placeholder="Username" />
+    <input type="password" id="login-password" placeholder="Password" />
+    <button id="loginBtn">Login</button>
   </div>
 
-  <!-- Signup Form -->
-  <div id="signup-form">
-    <h2>Sign Up</h2>
-    <input type="text" id="signup-username" placeholder="Username"><br>
-    <input type="password" id="signup-password" placeholder="Password"><br>
-    <input type="email" id="signup-email" placeholder="Email"><br>
+  <div id="signup-form" class="auth-form">
+    <h2>Create Account</h2>
+    <input type="text" id="signup-username" placeholder="Username" />
+    <input type="password" id="signup-password" placeholder="Password" />
+    <input type="email" id="signup-email" placeholder="Email" />
     <button id="signupBtn">Sign Up</button>
   </div>
 
-  <!-- Game UI -->
   <div id="game-ui">
-    <div id="user-display"></div>
-    <p>Welcome to the game.</p>
-    <button id="logoutBtn" onclick="logout()">Log Out</button>
+    <div class="hud">
+      <span id="user-display"></span>
+      <button onclick="logout()">Logout</button>
+    </div>
+    <div class="centered">
+      <h1>Welcome to the Game</h1>
+      <!-- Game screen will expand here -->
+    </div>
   </div>
 
-  <!-- Load the logic file -->
+  <!-- ✅ Make sure the file is named exactly 'gamelogic.js' -->
   <script src="gamelogic.js"></script>
 </body>
 </html>
