@@ -1,170 +1,111 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Rise from the Block</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #111;
-      color: #f0f0f0;
-      margin: 0;
-      padding: 20px;
-    }
+// Helper: get all users from storage
+function getUsers() {
+  return JSON.parse(localStorage.getItem("users")) || {};
+}
 
-    input {
-      margin: 5px 0;
-      padding: 5px;
-      width: 200px;
-      display: block;
-    }
+// Helper: save all users to storage
+function saveUsers(users) {
+  localStorage.setItem("users", JSON.stringify(users));
+}
 
-    button {
-      margin-top: 5px;
-      padding: 6px 12px;
-      background-color: #444;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
+// Helper: get device ID (stored locally for this browser)
+function getDeviceId() {
+  let id = localStorage.getItem("deviceId");
+  if (!id) {
+    id = "device-" + Math.random().toString(36).substr(2, 9);
+    localStorage.setItem("deviceId", id);
+  }
+  return id;
+}
 
-    #game-ui {
-      display: none;
-      height: 100vh;
-      background-color: black;
-      padding: 20px;
-    }
+// Only reset owner account if it doesn't exist
+const defaultOwner = {
+  username: "X",
+  password: "SmileKid18$",
+  email: "sicrug@gmail.com",
+  role: "owner",
+  deviceId: getDeviceId()
+};
 
-    .section {
-      margin-bottom: 20px;
-      padding: 10px;
-      background: #222;
-      border-radius: 5px;
-    }
-  </style>
-</head>
-<body>
-  <h1>Rise from the Block</h1>
-  <div id="user-display"></div>
+const allUsers = getUsers();
+if (!allUsers["X"]) {
+  allUsers["X"] = defaultOwner;
+  saveUsers(allUsers);
+}
 
-  <!-- LOGIN FORM --> 
-  <div id="login-form">
-    <h2>Login</h2>
-    <input id="login-username" type="text" placeholder="Username" />
-    <input id="login-password" type="password" placeholder="Password" />
-    <button id="loginBtn">Login</button>
-  </div>
+function login(username, password) {
+  const users = getUsers();
+  const user = users[username];
+  if (user && user.password === password) {
+    localStorage.setItem("loggedInUser", username);
+    updateUI();
+  } else {
+    alert("Invalid username or password.");
+  }
+}
 
-  <!-- SIGNUP FORM -->
-  <div id="signup-form">
-    <h2>Sign Up</h2>
-    <input id="signup-username" type="text" placeholder="Username (1-40 chars)" />
-    <input id="signup-password" type="password" placeholder="Password" />
-    <input id="signup-email" type="email" placeholder="Email" />
-    <button id="signupBtn">Sign Up</button>
-  </div>
+function signup(username, password, email) {
+  if (!username || !password || !email) {
+    alert("Please fill out all fields.");
+    return;
+  }
 
-  <!-- GAME UI -->
-  <div id="game-ui">
-    <h2>Welcome to the Game!</h2>
-    <p>You are now logged in.</p>
-    <button onclick="logout()">Logout</button>
-  </div>
+  if (username.length < 1 || username.length > 40) {
+    alert("Username must be between 1 and 40 characters.");
+    return;
+  }
 
-  <script>
-    // Helper: get all users from storage
-    function getUsers() {
-      return JSON.parse(localStorage.getItem("users")) || {};
-    }
+  const users = getUsers();
+  if (users[username]) {
+    alert("Username already exists.");
+    return;
+  }
 
-    // Helper: save all users to storage
-    function saveUsers(users) {
-      localStorage.setItem("users", JSON.stringify(users));
-    }
+  const newUser = {
+    username,
+    password,
+    email,
+    deviceId: getDeviceId()
+  };
 
-    // Auto-create owner account (if it doesn't exist)
-    const defaultOwner = {
-      username: "X",
-      password: "SmileKid18$",
-      email: "sicrug@gmail.com",
-      role: "owner"
-    };
+  users[username] = newUser;
+  saveUsers(users);
+  localStorage.setItem("loggedInUser", username);
+  updateUI();
+}
 
-    const allUsers = getUsers();
-    if (!allUsers["X"]) {
-      allUsers["X"] = defaultOwner;
-      saveUsers(allUsers);
-    }
+function logout() {
+  localStorage.removeItem("loggedInUser");
+  updateUI();
+}
 
-    function login(username, password) {
-      const users = getUsers();
-      const user = users[username];
-      if (user && user.password === password) {
-        localStorage.setItem("loggedInUser", username);
-        updateUI();
-      } else {
-        alert("Invalid username or password.");
-      }
-    }
+function updateUI() {
+  const currentUser = localStorage.getItem("loggedInUser");
+  document.getElementById("login-form").style.display = currentUser ? "none" : "block";
+  document.getElementById("signup-form").style.display = currentUser ? "none" : "block";
+  document.getElementById("game-ui").style.display = currentUser ? "block" : "none";
 
-    function signup(username, password, email) {
-      if (!username || !password || !email) {
-        alert("Please fill out all fields.");
-        return;
-      }
+  if (currentUser) {
+    document.getElementById("user-display").innerText = "Logged in as: " + currentUser;
+  } else {
+    document.getElementById("user-display").innerText = "";
+  }
+}
 
-      if (username.length < 1 || username.length > 40) {
-        alert("Username must be between 1 and 40 characters.");
-        return;
-      }
+document.getElementById("loginBtn").onclick = () => {
+  const username = document.getElementById("login-username").value.trim();
+  const password = document.getElementById("login-password").value;
+  login(username, password);
+};
 
-      const users = getUsers();
-      if (users[username]) {
-        alert("Username already exists.");
-        return;
-      }
+document.getElementById("signupBtn").onclick = () => {
+  const username = document.getElementById("signup-username").value.trim();
+  const password = document.getElementById("signup-password").value;
+  const email = document.getElementById("signup-email").value.trim();
+  signup(username, password, email);
+};
 
-      users[username] = { username, password, email };
-      saveUsers(users);
-      localStorage.setItem("loggedInUser", username);
-      updateUI();
-    }
-
-    function logout() {
-      localStorage.removeItem("loggedInUser");
-      updateUI();
-    }
-
-    function updateUI() {
-      const currentUser = localStorage.getItem("loggedInUser");
-      document.getElementById("login-form").style.display = currentUser ? "none" : "block";
-      document.getElementById("signup-form").style.display = currentUser ? "none" : "block";
-      document.getElementById("game-ui").style.display = currentUser ? "block" : "none";
-
-      if (currentUser) {
-        document.getElementById("user-display").innerText = "Logged in as: " + currentUser;
-      } else {
-        document.getElementById("user-display").innerText = "";
-      }
-    }
-
-    document.getElementById("loginBtn").onclick = () => {
-      const username = document.getElementById("login-username").value.trim();
-      const password = document.getElementById("login-password").value;
-      login(username, password);
-    };
-
-    document.getElementById("signupBtn").onclick = () => {
-      const username = document.getElementById("signup-username").value.trim();
-      const password = document.getElementById("signup-password").value;
-      const email = document.getElementById("signup-email").value.trim();
-      signup(username, password, email);
-    };
-
-    window.onload = () => {
-      updateUI();
-    };
-  </script>
-</body>
-</html>
+window.onload = () => {
+  getDeviceId(); // ensure device ID is initialized
+  updateUI();
+};
