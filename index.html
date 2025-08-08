@@ -1,58 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Rise from the Block</title>
   <style>
     body {
-      margin: 0;
       font-family: Arial, sans-serif;
       background-color: black;
       color: white;
+      margin: 0;
+      padding: 0;
     }
-
     #game-ui {
       display: none;
       padding: 20px;
     }
-
-    .auth-form {
-      margin: 20px;
-    }
-
-    .hud {
+    .top-right {
       position: absolute;
       top: 10px;
       right: 10px;
     }
-
-    button {
-      padding: 5px 10px;
-      font-size: 16px;
+    .center-box {
+      width: 300px;
+      margin: 100px auto;
+      background-color: #1e1e1e;
+      padding: 20px;
+      border-radius: 8px;
     }
-
-    .centered {
-      text-align: center;
-      padding-top: 40px;
-    }
-
-    input {
-      display: block;
-      margin: 8px 0;
+    input, button {
+      width: 100%;
       padding: 8px;
+      margin: 6px 0;
+      box-sizing: border-box;
+    }
+    h2 {
+      text-align: center;
     }
   </style>
 </head>
 <body>
-  <div id="login-form" class="auth-form">
+  <div id="login-form" class="center-box">
     <h2>Login</h2>
     <input type="text" id="login-username" placeholder="Username" />
     <input type="password" id="login-password" placeholder="Password" />
     <button id="loginBtn">Login</button>
   </div>
 
-  <div id="signup-form" class="auth-form">
-    <h2>Create Account</h2>
+  <div id="signup-form" class="center-box">
+    <h2>Sign Up</h2>
     <input type="text" id="signup-username" placeholder="Username" />
     <input type="password" id="signup-password" placeholder="Password" />
     <input type="email" id="signup-email" placeholder="Email" />
@@ -60,17 +56,14 @@
   </div>
 
   <div id="game-ui">
-    <div class="hud">
-      <span id="user-display"></span>
+    <div class="top-right">
       <button onclick="logout()">Logout</button>
     </div>
-    <div class="centered">
-      <h1>Welcome to the Game</h1>
-      <!-- Game screen will expand here -->
-    </div>
+    <h2>Welcome to Rise from the Block</h2>
+    <p id="user-display"></p>
+    <!-- Future game HUD content will go here -->
   </div>
 
-  <!-- ✅ Make sure the file is named exactly 'gamelogic.js' -->
   <script src="gamelogic.js"></script>
 </body>
 </html>
