@@ -85,10 +85,11 @@ function updateUI() {
   document.getElementById("signup-form").style.display = currentUser ? "none" : "block";
   document.getElementById("game-ui").style.display = currentUser ? "block" : "none";
 
+  const userDisplay = document.getElementById("user-display");
   if (currentUser) {
-    document.getElementById("user-display").innerText = "Logged in as: " + currentUser;
+    userDisplay.innerText = "Logged in as: " + currentUser;
   } else {
-    document.getElementById("user-display").innerText = "";
+    userDisplay.innerText = "";
   }
 }
 
