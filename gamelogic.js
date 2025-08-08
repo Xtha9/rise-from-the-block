@@ -13,7 +13,12 @@ function signup(username, password) {
     alert("Username already exists");
     return false;
   }
-  users.push({ username, password, avatar: "default-avatar.png" });
+  users.push({
+    username,
+    password,
+    avatar:
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABFElEQVR4nO3QQQkAIAwDsIv+Y60HXYQQaZB1fTKa9u79Hy5cuXLiwoULFixYtXrw4cfLkyeP///fVJzq//V6uV3Z4Hh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0aADoWgGqaPPY9EAAAAASUVORK5CYII="
+  });
   saveUsers();
   return true;
 }
