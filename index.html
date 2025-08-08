@@ -60,6 +60,10 @@
     input {
       margin: 5px;
     }
+    #account-settings {
+      display: none;
+      padding: 20px;
+    }
   </style>
 </head>
 <body>
@@ -69,7 +73,7 @@
   </div>
   <div class="dropdown" id="avatarDropdown">
     <a href="#" id="logoutBtn">Log out</a>
-    <a href="#">Account Settings</a>
+    <a href="#" id="accountSettingsLink">Account Settings</a>
   </div>
 
   <div id="login-form" class="auth-container">
@@ -92,10 +96,19 @@
     <!-- Game content will go here -->
   </div>
 
+  <div id="account-settings">
+    <h3>Account Settings</h3>
+    <label for="avatarUpload">Upload Avatar Image:</label>
+    <input type="file" id="avatarUpload" accept="image/*" />
+  </div>
+
   <script src="gamelogic.js"></script>
   <script>
     const avatar = document.getElementById("avatarIcon");
     const dropdown = document.getElementById("avatarDropdown");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const accountSettingsLink = document.getElementById("accountSettingsLink");
+    const accountSettings = document.getElementById("account-settings");
 
     avatar.addEventListener("click", () => {
       dropdown.style.display = dropdown.style.display === "flex" ? "none" : "flex";
@@ -107,9 +120,16 @@
       }
     });
 
-    document.getElementById("logoutBtn").addEventListener("click", () => {
+    logoutBtn.addEventListener("click", () => {
       localStorage.removeItem("loggedInUser");
       location.reload();
+    });
+
+    accountSettingsLink.addEventListener("click", () => {
+      document.getElementById("login-form").style.display = "none";
+      document.getElementById("signup-form").style.display = "none";
+      document.getElementById("game-ui").style.display = "none";
+      accountSettings.style.display = "block";
     });
   </script>
 </body>
