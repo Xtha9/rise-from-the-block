@@ -1,61 +1,50 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const avatar = document.getElementById('avatar');
-  const dropdownMenu = document.getElementById('dropdownMenu');
-  const accountSettingsBtn = document.getElementById('accountSettingsBtn');
-  const logoutBtn = document.getElementById('logoutBtn');
-  const accountSettings = document.getElementById('account-settings');
-  const gameUI = document.getElementById('game-ui');
-  const homeBtn = document.getElementById('homeBtn');
-  const backBtn = document.getElementById('backBtn');
-  const avatarUpload = document.getElementById('avatarUpload');
-  const confirmUpload = document.getElementById('confirmUpload');
+// gamelogic.js
 
-  let uploadedAvatar = localStorage.getItem('userAvatar');
-  if (uploadedAvatar) {
-    avatar.src = uploadedAvatar;
+// Basic user authentication simulation
+let currentUser = null;
+let users = JSON.parse(localStorage.getItem("users")) || [];
+
+function saveUsers() {
+  localStorage.setItem("users", JSON.stringify(users));
+}
+
+function signup(username, password) {
+  if (users.some((u) => u.username === username)) {
+    alert("Username already exists");
+    return false;
   }
+  users.push({ username, password, avatar: "default-avatar.png" });
+  saveUsers();
+  return true;
+}
 
-  // Toggle dropdown on avatar click
-  avatar.addEventListener('click', () => {
-    dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
-  });
+function login(username, password) {
+  const user = users.find((u) => u.username === username && u.password === password);
+  if (!user) {
+    alert("Invalid login credentials");
+    return false;
+  }
+  currentUser = user;
+  return true;
+}
 
-  // Navigate to account settings
-  accountSettingsBtn.addEventListener('click', () => {
-    gameUI.style.display = 'none';
-    accountSettings.style.display = 'block';
-    dropdownMenu.style.display = 'none';
-  });
+function logout() {
+  currentUser = null;
+}
 
-  // Logout logic (basic placeholder)
-  logoutBtn.addEventListener('click', () => {
-    localStorage.clear();
-    location.reload();
-  });
+function updateAvatarImage(file) {
+  if (!currentUser) return;
 
-  // Home button shows main UI
-  homeBtn.addEventListener('click', () => {
-    accountSettings.style.display = 'none';
-    gameUI.style.display = 'block';
-  });
+  const reader = new FileReader();
+  reader.onload = function (event) {
+    currentUser.avatar = event.target.result;
+    saveUsers();
+    document.getElementById("avatar").src = currentUser.avatar;
+  };
+  reader.readAsDataURL(file);
+}
 
-  // Back button hides settings and shows game UI
-  backBtn.addEventListener('click', () => {
-    accountSettings.style.display = 'none';
-    gameUI.style.display = 'block';
-  });
+// Event listeners that should stay inside HTML or separate controller file.
+// Only keep game-specific logic here moving forward.
 
-  // Confirm avatar upload
-  confirmUpload.addEventListener('click', () => {
-    const file = avatarUpload.files[0];
-    if (!file) return alert("Please select an image first.");
-
-    const reader = new FileReader();
-    reader.onload = () => {
-      avatar.src = reader.result;
-      localStorage.setItem('userAvatar', reader.result);
-      avatarUpload.value = '';
-    };
-    reader.readAsDataURL(file);
-  });
-});
+// Add game-specific logic like jobs, stats, levels, money, etc. here.
