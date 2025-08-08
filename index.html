@@ -5,131 +5,76 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rise from the Block</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #111;
-      color: #fff;
-    }
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px 20px;
-      background-color: #222;
-      border-bottom: 1px solid red;
-    }
-    .topbar .title {
-      font-size: 18px;
-      font-weight: bold;
-    }
-    .avatar {
-      width: 36px;
-      height: 36px;
+    body { font-family: Arial, sans-serif; background: #222; color: #fff; margin: 0; padding: 0; }
+    #game-ui { display: none; padding: 20px; }
+    .hud { position: relative; background: #000; padding: 10px; display: flex; justify-content: space-between; align-items: center; }
+    #logoutBtn { color: red; cursor: pointer; text-decoration: underline; }
+    #user-display { font-size: 14px; }
+    .avatar-container { position: absolute; top: 10px; left: 10px; cursor: pointer; }
+    #avatarIcon {
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
-      background: url('https://abs.twimg.com/sticky/default_profile_images/default_profile_400x400.png') center/cover;
-      cursor: pointer;
+      background-size: cover;
+      background-position: center;
+      background-color: #555;
     }
-    .dropdown {
-      position: absolute;
-      top: 60px;
-      left: 10px;
-      background-color: #333;
-      border: 1px solid #444;
-      border-radius: 4px;
-      display: none;
-      flex-direction: column;
-      min-width: 150px;
-      z-index: 1000;
-    }
-    .dropdown a {
-      padding: 10px;
-      color: #fff;
-      text-decoration: none;
-    }
-    .dropdown a:hover {
-      background-color: #444;
-    }
-    #game-ui {
-      padding: 20px;
-    }
-    .auth-container {
-      margin: 20px;
-    }
-    input {
-      margin: 5px;
-    }
-    #account-settings {
-      display: none;
-      padding: 20px;
-    }
+    .dropdown { display: none; position: absolute; top: 50px; left: 0; background: #333; padding: 10px; border-radius: 5px; }
+    .dropdown a { color: white; display: block; margin-bottom: 5px; cursor: pointer; }
+    #account-settings { display: none; padding: 20px; background: #111; }
   </style>
 </head>
 <body>
-  <div class="topbar">
-    <div class="avatar" id="avatarIcon"></div>
-    <div class="title">Welcome to Rise from the Block</div>
-  </div>
-  <div class="dropdown" id="avatarDropdown">
-    <a href="#" id="logoutBtn">Log out</a>
-    <a href="#" id="accountSettingsLink">Account Settings</a>
-  </div>
-
-  <div id="login-form" class="auth-container">
-    <h3>Login</h3>
-    <input type="text" id="login-username" placeholder="Username" />
-    <input type="password" id="login-password" placeholder="Password" />
+  <div id="login-form">
+    <h2>Login</h2>
+    <input id="login-username" placeholder="Username" />
+    <input id="login-password" type="password" placeholder="Password" />
     <button id="loginBtn">Login</button>
   </div>
 
-  <div id="signup-form" class="auth-container">
-    <h3>Sign Up</h3>
-    <input type="text" id="signup-username" placeholder="Username" />
-    <input type="password" id="signup-password" placeholder="Password" />
-    <input type="email" id="signup-email" placeholder="Email" />
+  <div id="signup-form">
+    <h2>Sign Up</h2>
+    <input id="signup-username" placeholder="Username" />
+    <input id="signup-password" type="password" placeholder="Password" />
+    <input id="signup-email" placeholder="Email" />
     <button id="signupBtn">Sign Up</button>
   </div>
 
-  <div id="game-ui" style="display:none">
-    <div id="user-display"></div>
-    <!-- Game content will go here -->
+  <div id="game-ui">
+    <div class="hud">
+      <div class="avatar-container">
+        <div id="avatarIcon"></div>
+        <div class="dropdown" id="avatarDropdown">
+          <a id="accountSettingsLink">Account Settings</a>
+          <a id="logoutBtn">Logout</a>
+        </div>
+      </div>
+      <div><h2>Welcome to Rise from the Block</h2></div>
+    </div>
+
+    <div id="account-settings">
+      <h3>Account Settings</h3>
+      <input type="file" id="avatarUpload" accept="image/*" />
+      <button id="avatarConfirmBtn">Confirm</button>
+    </div>
   </div>
 
-  <div id="account-settings">
-    <h3>Account Settings</h3>
-    <label for="avatarUpload">Upload Avatar Image:</label>
-    <input type="file" id="avatarUpload" accept="image/*" />
-  </div>
-
-  <script src="gamelogic.js"></script>
+  <script src="GameLogic.js"></script>
   <script>
-    const avatar = document.getElementById("avatarIcon");
+    const avatarIcon = document.getElementById("avatarIcon");
     const dropdown = document.getElementById("avatarDropdown");
-    const logoutBtn = document.getElementById("logoutBtn");
-    const accountSettingsLink = document.getElementById("accountSettingsLink");
-    const accountSettings = document.getElementById("account-settings");
-
-    avatar.addEventListener("click", () => {
-      dropdown.style.display = dropdown.style.display === "flex" ? "none" : "flex";
+    avatarIcon.addEventListener("click", () => {
+      dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
     });
 
-    document.addEventListener("click", (e) => {
-      if (!avatar.contains(e.target) && !dropdown.contains(e.target)) {
-        dropdown.style.display = "none";
-      }
+    document.getElementById("accountSettingsLink").addEventListener("click", () => {
+      document.getElementById("account-settings").style.display = "block";
+      dropdown.style.display = "none";
     });
 
-    logoutBtn.addEventListener("click", () => {
+    document.getElementById("logoutBtn").addEventListener("click", () => {
       localStorage.removeItem("loggedInUser");
       location.reload();
-    });
-
-    accountSettingsLink.addEventListener("click", () => {
-      document.getElementById("login-form").style.display = "none";
-      document.getElementById("signup-form").style.display = "none";
-      document.getElementById("game-ui").style.display = "none";
-      accountSettings.style.display = "block";
     });
   </script>
 </body>
