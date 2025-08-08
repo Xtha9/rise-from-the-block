@@ -1,11 +1,14 @@
 // gamelogic.js
 
-// Basic user authentication simulation
-let currentUser = null;
+let currentUser = JSON.parse(localStorage.getItem("currentUser")) || null;
 let users = JSON.parse(localStorage.getItem("users")) || [];
 
 function saveUsers() {
   localStorage.setItem("users", JSON.stringify(users));
+}
+
+function saveCurrentUser() {
+  localStorage.setItem("currentUser", JSON.stringify(currentUser));
 }
 
 function signup(username, password) {
@@ -13,13 +16,16 @@ function signup(username, password) {
     alert("Username already exists");
     return false;
   }
-  users.push({
+  const newUser = {
     username,
     password,
     avatar:
-      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABFElEQVR4nO3QQQkAIAwDsIv+Y60HXYQQaZB1fTKa9u79Hy5cuXLiwoULFixYtXrw4cfLkyeP///fVJzq//V6uV3Z4Hh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0aADoWgGqaPPY9EAAAAASUVORK5CYII="
-  });
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABFElEQVR4nO3QQQkAIAwDsIv+Y60HXYQQaZB1fTKa9u79Hy5cuXLiwoULFixYtXrw4cfLkyeP///fVJzq//V6uV3Z4Hh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0YHh0aADoWgGqaPPY9EAAAAASUVORK5CYII="
+  };
+  users.push(newUser);
   saveUsers();
+  currentUser = newUser;
+  saveCurrentUser();
   return true;
 }
 
@@ -30,11 +36,15 @@ function login(username, password) {
     return false;
   }
   currentUser = user;
+  saveCurrentUser();
+  updateAvatarOnPage();
   return true;
 }
 
 function logout() {
   currentUser = null;
+  localStorage.removeItem("currentUser");
+  document.getElementById("avatar").src = "";
 }
 
 function updateAvatarImage(file) {
@@ -43,13 +53,25 @@ function updateAvatarImage(file) {
   const reader = new FileReader();
   reader.onload = function (event) {
     currentUser.avatar = event.target.result;
-    saveUsers();
-    document.getElementById("avatar").src = currentUser.avatar;
+    const userIndex = users.findIndex(u => u.username === currentUser.username);
+    if (userIndex !== -1) {
+      users[userIndex] = currentUser;
+      saveUsers();
+      saveCurrentUser();
+      updateAvatarOnPage();
+    }
   };
   reader.readAsDataURL(file);
 }
 
-// Event listeners that should stay inside HTML or separate controller file.
-// Only keep game-specific logic here moving forward.
+function updateAvatarOnPage() {
+  const avatarImg = document.getElementById("avatar");
+  if (avatarImg && currentUser && currentUser.avatar) {
+    avatarImg.src = currentUser.avatar;
+  }
+}
 
-// Add game-specific logic like jobs, stats, levels, money, etc. here.
+// Make sure avatar updates on page load if logged in
+document.addEventListener("DOMContentLoaded", () => {
+  updateAvatarOnPage();
+});
