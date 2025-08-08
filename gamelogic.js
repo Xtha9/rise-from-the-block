@@ -5,6 +5,7 @@ const gameUI = document.getElementById("game-ui");
 const userDisplay = document.getElementById("user-display");
 const avatarIcon = document.getElementById("avatarIcon");
 const avatarUpload = document.getElementById("avatarUpload");
+const avatarConfirmBtn = document.getElementById("avatarConfirmBtn");
 
 let users = JSON.parse(localStorage.getItem("users")) || {};
 let loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
@@ -56,17 +57,25 @@ document.getElementById("signupBtn").addEventListener("click", () => {
   }
 });
 
+let tempAvatarData = null;
+
 avatarUpload.addEventListener("change", function () {
   const file = this.files[0];
   if (file && loggedInUser) {
     const reader = new FileReader();
     reader.onload = function (e) {
-      const imageUrl = e.target.result;
-      users[loggedInUser.username].avatar = imageUrl;
-      saveUsers();
-      updateAvatarDisplay(users[loggedInUser.username]);
-      alert("Avatar uploaded successfully!");
+      tempAvatarData = e.target.result;
     };
     reader.readAsDataURL(file);
+  }
+});
+
+avatarConfirmBtn.addEventListener("click", function () {
+  if (tempAvatarData && loggedInUser) {
+    users[loggedInUser.username].avatar = tempAvatarData;
+    saveUsers();
+    updateAvatarDisplay(users[loggedInUser.username]);
+    alert("Avatar updated successfully!");
+    tempAvatarData = null;
   }
 });
