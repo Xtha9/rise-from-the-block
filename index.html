@@ -1,166 +1,155 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Rise From the Block</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rise From The Block</title>
   <style>
     body {
-      background-color: #121212;
-      color: white;
-      font-family: sans-serif;
       margin: 0;
-      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: #1e1e1e;
+      color: #ffffff;
     }
-
     header {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      background-color: #111;
+      align-items: center;
       padding: 10px 20px;
+      background-color: #2a2a2a;
     }
-
+    #avatar-container {
+      position: relative;
+    }
     #avatar {
-      width: 40px;
-      height: 40px;
+      width: 50px;
+      height: 50px;
       border-radius: 50%;
       cursor: pointer;
     }
-
-    #dropdownMenu {
+    #dropdown {
       display: none;
       position: absolute;
       top: 60px;
-      left: 20px;
+      left: 0;
       background-color: #333;
-      border: 1px solid #666;
-      padding: 10px;
-      z-index: 10;
-    }
-
-    #dropdownMenu button {
-      display: block;
-      width: 100%;
-      background-color: #222;
-      border: none;
-      padding: 8px;
-      margin-bottom: 5px;
-      color: white;
-      cursor: pointer;
-    }
-
-    h1 {
-      margin: 0;
-      text-align: center;
-      flex: 1;
-    }
-
-    main {
-      padding: 20px;
-    }
-
-    #account-settings,
-    #login-form,
-    #signup-form,
-    #game-ui {
-      padding: 20px;
-    }
-
-    input, button {
-      background-color: #222;
-      color: white;
       border: 1px solid #555;
-      padding: 8px;
-      margin: 5px 0;
+      padding: 10px;
+      z-index: 100;
     }
-
-    h2, p, label {
+    #dropdown button {
+      display: block;
+      background: none;
+      color: #fff;
+      border: none;
+      margin: 5px 0;
+      cursor: pointer;
+      text-align: left;
+    }
+    h1 {
+      text-align: center;
+      margin: 0;
+    }
+    #account-settings {
+      display: none;
+      padding: 20px;
+      background-color: #1e1e1e;
+      text-align: center;
+    }
+    #game-home {
+      padding: 20px;
+      text-align: center;
+    }
+    button {
+      padding: 10px;
+      margin: 10px;
+      background-color: #444;
       color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    input[type="file"] {
+      margin: 10px;
     }
   </style>
 </head>
 <body>
   <header>
-    <img src="default-avatar.png" id="avatar" alt="Avatar">
-    <h1 style="flex-grow: 1; text-align: center;">Welcome to Rise From the Block</h1>
+    <div id="avatar-container">
+      <img id="avatar" src="" alt="Avatar" />
+      <div id="dropdown">
+        <button onclick="showAccountSettings()">Account Settings</button>
+        <button onclick="handleLogout()">Logout</button>
+      </div>
+    </div>
+    <h1>Welcome to Rise From The Block</h1>
+    <div></div>
   </header>
 
-  <div id="dropdownMenu">
-    <button id="accountSettingsBtn">Account Settings</button>
-    <button id="logoutBtn">Logout</button>
-  </div>
-
   <main>
-    <div id="login-form">
-      <!-- Login form elements -->
+    <div id="game-home">
+      <p>Main game area goes here. Jobs, stats, etc.</p>
     </div>
 
-    <div id="signup-form">
-      <!-- Signup form elements -->
-    </div>
-
-    <div id="game-ui" style="display: none;">
-      <!-- Main game UI -->
-    </div>
-
-    <div id="account-settings" style="display: none;">
+    <div id="account-settings">
       <h2>Account Settings</h2>
-      <input type="file" id="avatarUpload" accept="image/*">
-      <button id="confirmUpload">Confirm</button>
-      <button id="homeBtn">Home</button>
-      <button id="backBtn">Back</button>
+      <input type="file" id="avatarInput" />
+      <br />
+      <button onclick="confirmAvatar()">Confirm</button>
+      <button onclick="goBack()">Back</button>
+      <button onclick="goHome()">Home</button>
     </div>
   </main>
 
+  <script src="gamelogic.js"></script>
   <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const avatar = document.getElementById("avatar");
-      const dropdownMenu = document.getElementById("dropdownMenu");
-      const accountSettingsBtn = document.getElementById("accountSettingsBtn");
-      const logoutBtn = document.getElementById("logoutBtn");
-      const accountSettings = document.getElementById("account-settings");
-      const homeBtn = document.getElementById("homeBtn");
-      const backBtn = document.getElementById("backBtn");
-      const gameUI = document.getElementById("game-ui");
+    const avatar = document.getElementById("avatar");
+    const dropdown = document.getElementById("dropdown");
 
-      if (avatar) {
-        avatar.addEventListener("click", () => {
-          dropdownMenu.style.display =
-            dropdownMenu.style.display === "block" ? "none" : "block";
-        });
+    avatar.addEventListener("click", () => {
+      dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+    });
+
+    function showAccountSettings() {
+      document.getElementById("game-home").style.display = "none";
+      document.getElementById("account-settings").style.display = "block";
+      dropdown.style.display = "none";
+    }
+
+    function goBack() {
+      document.getElementById("account-settings").style.display = "none";
+      dropdown.style.display = "none";
+    }
+
+    function goHome() {
+      document.getElementById("account-settings").style.display = "none";
+      document.getElementById("game-home").style.display = "block";
+      dropdown.style.display = "none";
+    }
+
+    function confirmAvatar() {
+      const file = document.getElementById("avatarInput").files[0];
+      if (file) {
+        updateAvatarImage(file);
+        alert("Avatar updated!");
+        goBack();
       }
+    }
 
-      if (accountSettingsBtn) {
-        accountSettingsBtn.addEventListener("click", () => {
-          accountSettings.style.display = "block";
-          gameUI.style.display = "none";
-          dropdownMenu.style.display = "none";
-        });
-      }
+    function handleLogout() {
+      logout();
+      location.reload(); // basic simulation of logging out
+    }
 
-      if (logoutBtn) {
-        logoutBtn.addEventListener("click", () => {
-          // Your logout logic here
-          console.log("Logged out");
-        });
-      }
-
-      if (homeBtn) {
-        homeBtn.addEventListener("click", () => {
-          accountSettings.style.display = "none";
-          gameUI.style.display = "block";
-        });
-      }
-
-      if (backBtn) {
-        backBtn.addEventListener("click", () => {
-          accountSettings.style.display = "none";
-          gameUI.style.display = "block";
-        });
+    // On load, show avatar if logged in
+    window.addEventListener("DOMContentLoaded", () => {
+      const users = JSON.parse(localStorage.getItem("users")) || [];
+      const lastUser = users[users.length - 1];
+      if (lastUser) {
+        document.getElementById("avatar").src = lastUser.avatar;
       }
     });
   </script>
-  <script src="gamelogic.js"></script>
 </body>
 </html>
