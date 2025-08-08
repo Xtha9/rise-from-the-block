@@ -84,14 +84,26 @@
   </header>
 
   <main>
-    <div id="authSection">
-      <h3>Signup / Login</h3>
-      <input type="email" id="email" placeholder="Email" />
-      <input type="text" id="username" placeholder="Username" oninput="checkUsernameAvailability()"/>
+    <div id="tabs">
+      <button onclick="showTab('signup')">Sign Up</button>
+      <button onclick="showTab('login')">Log In</button>
+    </div>
+
+    <div id="signupForm" class="hidden">
+      <h3>Sign Up</h3>
+      <input type="email" id="signupEmail" placeholder="Email" />
+      <input type="text" id="signupUsername" placeholder="Username" oninput="checkUsernameAvailability()"/>
       <span id="usernameStatus"></span><br />
-      <input type="password" id="password" placeholder="Password" />
+      <input type="password" id="signupPassword" placeholder="Password" />
       <br />
       <button onclick="handleSignup()">Sign Up</button>
+    </div>
+
+    <div id="loginForm" class="hidden">
+      <h3>Log In</h3>
+      <input type="text" id="loginUsername" placeholder="Username" />
+      <input type="password" id="loginPassword" placeholder="Password" />
+      <br />
       <button onclick="handleLogin()">Log In</button>
     </div>
 
@@ -118,8 +130,15 @@
       avatarMenu.style.display = avatarMenu.style.display === "block" ? "none" : "block";
     });
 
+    function showTab(tab) {
+      document.getElementById("signupForm").classList.add("hidden");
+      document.getElementById("loginForm").classList.add("hidden");
+      if (tab === "signup") document.getElementById("signupForm").classList.remove("hidden");
+      if (tab === "login") document.getElementById("loginForm").classList.remove("hidden");
+    }
+
     function checkUsernameAvailability() {
-      const username = document.getElementById("username").value;
+      const username = document.getElementById("signupUsername").value;
       const status = document.getElementById("usernameStatus");
       const exists = users.some(u => u.username === username);
       if (exists) {
@@ -132,13 +151,13 @@
     }
 
     function handleSignup() {
-      const email = document.getElementById("email").value;
-      const username = document.getElementById("username").value;
-      const password = document.getElementById("password").value;
+      const email = document.getElementById("signupEmail").value;
+      const username = document.getElementById("signupUsername").value;
+      const password = document.getElementById("signupPassword").value;
       if (!email || !username || !password) return alert("All fields required");
       if (signup(username, password, email)) {
         alert("Signup successful!");
-        document.getElementById("authSection").classList.add("hidden");
+        document.getElementById("signupForm").classList.add("hidden");
         document.getElementById("gameSection").classList.remove("hidden");
         avatar.src = users.find(u => u.username === username).avatar;
       } else {
@@ -147,12 +166,12 @@
     }
 
     function handleLogin() {
-      const username = document.getElementById("username").value;
-      const password = document.getElementById("password").value;
+      const username = document.getElementById("loginUsername").value;
+      const password = document.getElementById("loginPassword").value;
       if (!username || !password) return alert("Username and password are required.");
       if (login(username, password)) {
         alert("Login successful!");
-        document.getElementById("authSection").classList.add("hidden");
+        document.getElementById("loginForm").classList.add("hidden");
         document.getElementById("gameSection").classList.remove("hidden");
         avatar.src = users.find(u => u.username === username).avatar;
       } else {
@@ -169,6 +188,9 @@
         document.getElementById("accountSettings").classList.add("hidden");
       }
     }
+
+    // Default to login tab
+    showTab('login');
   </script>
 </body>
 </html>
