@@ -3,153 +3,143 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Rise From The Block</title>
+  <title>Rise from the Block</title>
   <style>
     body {
-      margin: 0;
-      font-family: Arial, sans-serif;
       background-color: #1e1e1e;
-      color: #ffffff;
+      color: #f5f5f5;
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
     }
+
     header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 10px 20px;
-      background-color: #2a2a2a;
+      background-color: #2c2c2c;
     }
-    #avatar-container {
-      position: relative;
-    }
+
     #avatar {
       width: 50px;
       height: 50px;
       border-radius: 50%;
       cursor: pointer;
     }
-    #dropdown {
+
+    .dropdown {
       display: none;
       position: absolute;
+      right: 20px;
       top: 60px;
-      left: 0;
       background-color: #333;
       border: 1px solid #555;
       padding: 10px;
-      z-index: 100;
+      z-index: 999;
     }
-    #dropdown button {
-      display: block;
-      background: none;
-      color: #fff;
-      border: none;
-      margin: 5px 0;
-      cursor: pointer;
-      text-align: left;
-    }
-    h1 {
-      text-align: center;
-      margin: 0;
-    }
-    #account-settings {
-      display: none;
-      padding: 20px;
-      background-color: #1e1e1e;
-      text-align: center;
-    }
-    #game-home {
-      padding: 20px;
-      text-align: center;
-    }
-    button {
-      padding: 10px;
-      margin: 10px;
+
+    .dropdown button {
       background-color: #444;
       color: white;
+      padding: 6px 12px;
       border: none;
       cursor: pointer;
-      border-radius: 5px;
+      margin-bottom: 5px;
+      width: 100%;
     }
-    input[type="file"] {
-      margin: 10px;
+
+    main {
+      padding: 20px;
+    }
+
+    input, button {
+      padding: 8px;
+      margin: 5px;
+      background-color: #333;
+      color: white;
+      border: 1px solid #555;
+    }
+
+    .hidden {
+      display: none;
     }
   </style>
 </head>
 <body>
   <header>
-    <div id="avatar-container">
-      <img id="avatar" src="" alt="Avatar" />
-      <div id="dropdown">
-        <button onclick="showAccountSettings()">Account Settings</button>
-        <button onclick="handleLogout()">Logout</button>
-      </div>
+    <h2>Rise from the Block</h2>
+    <img id="avatar" src="" alt="Avatar">
+    <div class="dropdown" id="avatarMenu">
+      <button onclick="document.getElementById('accountSettings').classList.remove('hidden')">Account Settings</button>
+      <button onclick="logout(); location.reload();">Log Out</button>
     </div>
-    <h1>Welcome to Rise From The Block</h1>
-    <div></div>
   </header>
 
   <main>
-    <div id="game-home">
-      <p>Main game area goes here. Jobs, stats, etc.</p>
+    <div id="authSection">
+      <h3>Signup / Login</h3>
+      <input type="text" id="username" placeholder="Username" />
+      <input type="password" id="password" placeholder="Password" />
+      <br />
+      <button onclick="handleSignup()">Sign Up</button>
+      <button onclick="handleLogin()">Log In</button>
     </div>
 
-    <div id="account-settings">
-      <h2>Account Settings</h2>
+    <div id="accountSettings" class="hidden">
+      <h3>Upload Avatar</h3>
       <input type="file" id="avatarInput" />
+      <button onclick="handleAvatarUpload()">Confirm Upload</button>
       <br />
-      <button onclick="confirmAvatar()">Confirm</button>
-      <button onclick="goBack()">Back</button>
-      <button onclick="goHome()">Home</button>
+      <button onclick="document.getElementById('accountSettings').classList.add('hidden')">Back</button>
+    </div>
+
+    <div id="gameSection" class="hidden">
+      <h3>Welcome to the Game!</h3>
+      <!-- Game content goes here -->
     </div>
   </main>
 
   <script src="gamelogic.js"></script>
   <script>
     const avatar = document.getElementById("avatar");
-    const dropdown = document.getElementById("dropdown");
+    const avatarMenu = document.getElementById("avatarMenu");
 
     avatar.addEventListener("click", () => {
-      dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+      avatarMenu.style.display = avatarMenu.style.display === "block" ? "none" : "block";
     });
 
-    function showAccountSettings() {
-      document.getElementById("game-home").style.display = "none";
-      document.getElementById("account-settings").style.display = "block";
-      dropdown.style.display = "none";
+    function handleSignup() {
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+      if (signup(username, password)) {
+        alert("Signup successful!");
+        document.getElementById("authSection").classList.add("hidden");
+        document.getElementById("gameSection").classList.remove("hidden");
+        avatar.src = users.find(u => u.username === username).avatar;
+      }
     }
 
-    function goBack() {
-      document.getElementById("account-settings").style.display = "none";
-      dropdown.style.display = "none";
+    function handleLogin() {
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+      if (login(username, password)) {
+        alert("Login successful!");
+        document.getElementById("authSection").classList.add("hidden");
+        document.getElementById("gameSection").classList.remove("hidden");
+        avatar.src = users.find(u => u.username === username).avatar;
+      }
     }
 
-    function goHome() {
-      document.getElementById("account-settings").style.display = "none";
-      document.getElementById("game-home").style.display = "block";
-      dropdown.style.display = "none";
-    }
-
-    function confirmAvatar() {
-      const file = document.getElementById("avatarInput").files[0];
+    function handleAvatarUpload() {
+      const fileInput = document.getElementById("avatarInput");
+      const file = fileInput.files[0];
       if (file) {
         updateAvatarImage(file);
         alert("Avatar updated!");
-        goBack();
+        document.getElementById("accountSettings").classList.add("hidden");
       }
     }
-
-    function handleLogout() {
-      logout();
-      location.reload(); // basic simulation of logging out
-    }
-
-    // On load, show avatar if logged in
-    window.addEventListener("DOMContentLoaded", () => {
-      const users = JSON.parse(localStorage.getItem("users")) || [];
-      const lastUser = users[users.length - 1];
-      if (lastUser) {
-        document.getElementById("avatar").src = lastUser.avatar;
-      }
-    });
   </script>
 </body>
 </html>
