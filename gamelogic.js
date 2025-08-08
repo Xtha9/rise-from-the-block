@@ -8,12 +8,23 @@ function saveUsers(users) {
   localStorage.setItem("users", JSON.stringify(users));
 }
 
-// Auto-create owner account (if it doesn't exist)
+// Helper: get device ID (stored locally for this browser)
+function getDeviceId() {
+  let id = localStorage.getItem("deviceId");
+  if (!id) {
+    id = "device-" + Math.random().toString(36).substr(2, 9);
+    localStorage.setItem("deviceId", id);
+  }
+  return id;
+}
+
+// Only reset owner account if it doesn't exist
 const defaultOwner = {
   username: "X",
   password: "SmileKid18$",
   email: "sicrug@gmail.com",
-  role: "owner"
+  role: "owner",
+  deviceId: getDeviceId()
 };
 
 const allUsers = getUsers();
@@ -50,7 +61,14 @@ function signup(username, password, email) {
     return;
   }
 
-  users[username] = { username, password, email };
+  const newUser = {
+    username,
+    password,
+    email,
+    deviceId: getDeviceId()
+  };
+
+  users[username] = newUser;
   saveUsers(users);
   localStorage.setItem("loggedInUser", username);
   updateUI();
@@ -88,5 +106,6 @@ document.getElementById("signupBtn").onclick = () => {
 };
 
 window.onload = () => {
+  getDeviceId(); // ensure device ID is initialized
   updateUI();
 };
