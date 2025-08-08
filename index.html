@@ -6,7 +6,7 @@
   <title>Rise From the Block</title>
   <style>
     body {
-      background-color: black;
+      background-color: #121212;
       color: white;
       font-family: sans-serif;
       margin: 0;
@@ -83,7 +83,7 @@
 <body>
   <header>
     <img src="default-avatar.png" id="avatar" alt="Avatar">
-    <h1>Welcome to Rise From the Block</h1>
+    <h1 style="flex-grow: 1; text-align: center;">Welcome to Rise From the Block</h1>
   </header>
 
   <div id="dropdownMenu">
@@ -113,6 +113,54 @@
     </div>
   </main>
 
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const avatar = document.getElementById("avatar");
+      const dropdownMenu = document.getElementById("dropdownMenu");
+      const accountSettingsBtn = document.getElementById("accountSettingsBtn");
+      const logoutBtn = document.getElementById("logoutBtn");
+      const accountSettings = document.getElementById("account-settings");
+      const homeBtn = document.getElementById("homeBtn");
+      const backBtn = document.getElementById("backBtn");
+      const gameUI = document.getElementById("game-ui");
+
+      if (avatar) {
+        avatar.addEventListener("click", () => {
+          dropdownMenu.style.display =
+            dropdownMenu.style.display === "block" ? "none" : "block";
+        });
+      }
+
+      if (accountSettingsBtn) {
+        accountSettingsBtn.addEventListener("click", () => {
+          accountSettings.style.display = "block";
+          gameUI.style.display = "none";
+          dropdownMenu.style.display = "none";
+        });
+      }
+
+      if (logoutBtn) {
+        logoutBtn.addEventListener("click", () => {
+          // Your logout logic here
+          console.log("Logged out");
+        });
+      }
+
+      if (homeBtn) {
+        homeBtn.addEventListener("click", () => {
+          accountSettings.style.display = "none";
+          gameUI.style.display = "block";
+        });
+      }
+
+      if (backBtn) {
+        backBtn.addEventListener("click", () => {
+          accountSettings.style.display = "none";
+          gameUI.style.display = "block";
+        });
+      }
+    });
+  </script>
   <script src="gamelogic.js"></script>
 </body>
 </html>
