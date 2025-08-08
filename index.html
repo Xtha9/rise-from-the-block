@@ -136,22 +136,27 @@
       const username = document.getElementById("username").value;
       const password = document.getElementById("password").value;
       if (!email || !username || !password) return alert("All fields required");
-      if (signup(username, password)) {
+      if (signup(username, password, email)) {
         alert("Signup successful!");
         document.getElementById("authSection").classList.add("hidden");
         document.getElementById("gameSection").classList.remove("hidden");
         avatar.src = users.find(u => u.username === username).avatar;
+      } else {
+        alert("Username already taken.");
       }
     }
 
     function handleLogin() {
       const username = document.getElementById("username").value;
       const password = document.getElementById("password").value;
+      if (!username || !password) return alert("Username and password are required.");
       if (login(username, password)) {
         alert("Login successful!");
         document.getElementById("authSection").classList.add("hidden");
         document.getElementById("gameSection").classList.remove("hidden");
         avatar.src = users.find(u => u.username === username).avatar;
+      } else {
+        alert("Invalid login credentials.");
       }
     }
 
