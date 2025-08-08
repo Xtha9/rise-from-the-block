@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Project Game</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Rise From The Block</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div id="authContainer">
@@ -14,61 +14,59 @@
     </div>
     <div class="tab-content active" id="loginForm">
       <h2>Login</h2>
-      <input type="text" id="loginUsername" placeholder="Username">
-      <input type="password" id="loginPassword" placeholder="Password">
+      <input type="text" id="loginUsername" placeholder="Username" />
+      <input type="password" id="loginPassword" placeholder="Password" />
       <button onclick="login(document.getElementById('loginUsername').value, document.getElementById('loginPassword').value)">Login</button>
     </div>
     <div class="tab-content" id="signupForm">
       <h2>Sign Up</h2>
-      <input type="text" id="signupUsername" placeholder="Username">
-      <input type="password" id="signupPassword" placeholder="Password">
-      <input type="email" id="signupEmail" placeholder="Email">
+      <input type="text" id="signupUsername" placeholder="Username" />
+      <input type="password" id="signupPassword" placeholder="Password" />
+      <input type="email" id="signupEmail" placeholder="Email" />
       <button onclick="signup(
         document.getElementById('signupUsername').value,
         document.getElementById('signupPassword').value,
-        document.getElementById('signupEmail').value
-      )">Sign Up</button>
+        document.getElementById('signupEmail').value)">Sign Up</button>
     </div>
   </div>
 
   <div id="homePage" style="display: none;">
-    <div class="topBar">
-      <div class="avatarWrapper">
-        <img id="avatar" src="" alt="Avatar" />
-        <span>Avatar</span>
-        <div id="dropdownMenu" class="dropdown-content">
-          <button onclick="showAccountSettings()">Settings</button>
-          <button onclick="logout()">Logout</button>
-        </div>
+    <div class="hud">
+      <img id="avatar" src="" alt="Avatar" />
+      <div id="dropdownMenu" class="dropdown-menu">
+        <button onclick="showAccountSettings()">Account Settings</button>
+        <button onclick="logout()">Logout</button>
       </div>
     </div>
     <h2>Welcome to the game</h2>
     <p>Game functions will appear here.</p>
 
     <div id="accountSettings" style="display: none;">
-      <input type="file" id="avatarUpload">
-      <button onclick="updateAvatarImage(document.getElementById('avatarUpload').files[0])">Confirm</button>
-      <br><br>
+      <h3>Upload Avatar</h3>
+      <input type="file" id="avatarInput" accept="image/*" />
+      <button onclick="updateAvatarImage(document.getElementById('avatarInput').files[0])">Confirm</button>
+      <br /><br />
       <button onclick="showHomePage()">Back</button>
       <button onclick="showHomePage()">Home</button>
     </div>
   </div>
 
+  <!-- Make sure the filename matches exactly -->
   <script src="gamelogic.js"></script>
   <script>
-    // Tab switching
-    document.getElementById("loginTab").addEventListener("click", () => {
-      document.getElementById("loginTab").classList.add("active");
-      document.getElementById("signupTab").classList.remove("active");
+    // Tab switching logic
+    document.getElementById("loginTab").addEventListener("click", function () {
       document.getElementById("loginForm").classList.add("active");
       document.getElementById("signupForm").classList.remove("active");
+      this.classList.add("active");
+      document.getElementById("signupTab").classList.remove("active");
     });
 
-    document.getElementById("signupTab").addEventListener("click", () => {
-      document.getElementById("signupTab").classList.add("active");
-      document.getElementById("loginTab").classList.remove("active");
+    document.getElementById("signupTab").addEventListener("click", function () {
       document.getElementById("signupForm").classList.add("active");
       document.getElementById("loginForm").classList.remove("active");
+      this.classList.add("active");
+      document.getElementById("loginTab").classList.remove("active");
     });
   </script>
 </body>
