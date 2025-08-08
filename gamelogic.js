@@ -85,11 +85,11 @@ function updateUI() {
   document.getElementById("signup-form").style.display = currentUser ? "none" : "block";
   document.getElementById("game-ui").style.display = currentUser ? "block" : "none";
 
-  const userDisplay = document.getElementById("user-display");
+  const display = document.getElementById("user-display");
   if (currentUser) {
-    userDisplay.innerText = "Logged in as: " + currentUser;
+    display.innerText = ""; // Removed verbose "Logged in as"
   } else {
-    userDisplay.innerText = "";
+    display.innerText = "";
   }
 }
 
@@ -107,6 +107,6 @@ document.getElementById("signupBtn").onclick = () => {
 };
 
 window.onload = () => {
-  getDeviceId(); // ensure device ID is initialized
+  getDeviceId();
   updateUI();
 };
