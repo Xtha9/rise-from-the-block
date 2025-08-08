@@ -20,6 +20,7 @@ function signup(username, password, email) {
   users.push(newUser);
   saveUsers();
   localStorage.setItem("currentUser", JSON.stringify(newUser));
+  showHomePage();
   return true;
 }
 
@@ -28,6 +29,7 @@ function login(username, password) {
   if (user) {
     currentUser = user;
     localStorage.setItem("currentUser", JSON.stringify(user));
+    showHomePage();
     return true;
   }
   return false;
@@ -36,6 +38,8 @@ function login(username, password) {
 function logout() {
   currentUser = null;
   localStorage.removeItem("currentUser");
+  document.getElementById("homePage").style.display = "none";
+  document.getElementById("authContainer").style.display = "block";
 }
 
 function updateAvatarImage(file) {
@@ -56,10 +60,18 @@ function updateAvatarImage(file) {
   reader.readAsDataURL(file);
 }
 
-// Load avatar on startup
-window.addEventListener("DOMContentLoaded", () => {
+function showHomePage() {
+  document.getElementById("authContainer").style.display = "none";
+  document.getElementById("homePage").style.display = "block";
   if (currentUser && currentUser.avatar) {
     const avatarImg = document.getElementById("avatar");
     if (avatarImg) avatarImg.src = currentUser.avatar;
+  }
+}
+
+// Load avatar and homepage on startup
+window.addEventListener("DOMContentLoaded", () => {
+  if (currentUser) {
+    showHomePage();
   }
 });
