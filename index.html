@@ -4,172 +4,72 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Project Game</title>
-  <style>
-    body {
-      background-color: #121212;
-      color: white;
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-    }
-    #authContainer, #homePage {
-      display: none;
-      padding: 20px;
-    }
-    .tab-header {
-      display: flex;
-      gap: 10px;
-    }
-    .tab-header button {
-      padding: 10px;
-      background-color: #222;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-    .tab-header button.active {
-      background-color: #444;
-    }
-    .tab-content {
-      display: none;
-      margin-top: 10px;
-    }
-    .tab-content.active {
-      display: block;
-    }
-    #avatarContainer {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-    }
-    #avatar {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      cursor: pointer;
-    }
-    #dropdownMenu {
-      position: absolute;
-      right: 10px;
-      top: 60px;
-      background-color: #222;
-      border: 1px solid #444;
-      display: none;
-      z-index: 100;
-    }
-    #dropdownMenu button {
-      display: block;
-      width: 100%;
-      padding: 10px;
-      background: none;
-      color: white;
-      border: none;
-      text-align: left;
-      cursor: pointer;
-    }
-    #dropdownMenu button:hover {
-      background-color: #333;
-    }
-    #accountSettings {
-      display: none;
-      margin-top: 20px;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="avatarContainer">
-    <img id="avatar" src="" alt="Avatar">
-    <div id="dropdownMenu">
-      <button onclick="showAccountSettings()">Settings</button>
-      <button onclick="logout()">Logout</button>
-    </div>
-  </div>
-
   <div id="authContainer">
-    <div class="tab-header">
-      <button id="loginTab" class="active" onclick="switchTab('loginForm')">Login</button>
-      <button id="signupTab" onclick="switchTab('signupForm')">Sign Up</button>
+    <div class="tabs">
+      <button class="tab-button active" id="loginTab">Login</button>
+      <button class="tab-button" id="signupTab">Sign Up</button>
     </div>
-
-    <div id="loginForm" class="tab-content active">
+    <div class="tab-content active" id="loginForm">
       <h2>Login</h2>
-      <input type="text" id="loginUsername" placeholder="Username"><br><br>
-      <input type="password" id="loginPassword" placeholder="Password"><br><br>
-      <button onclick="handleLogin()">Login</button>
+      <input type="text" id="loginUsername" placeholder="Username">
+      <input type="password" id="loginPassword" placeholder="Password">
+      <button onclick="login(document.getElementById('loginUsername').value, document.getElementById('loginPassword').value)">Login</button>
     </div>
-
-    <div id="signupForm" class="tab-content">
+    <div class="tab-content" id="signupForm">
       <h2>Sign Up</h2>
-      <input type="text" id="signupEmail" placeholder="Email"><br><br>
-      <input type="text" id="signupUsername" placeholder="Username"><br><br>
-      <input type="password" id="signupPassword" placeholder="Password"><br><br>
-      <button onclick="handleSignup()">Sign Up</button>
+      <input type="text" id="signupUsername" placeholder="Username">
+      <input type="password" id="signupPassword" placeholder="Password">
+      <input type="email" id="signupEmail" placeholder="Email">
+      <button onclick="signup(
+        document.getElementById('signupUsername').value,
+        document.getElementById('signupPassword').value,
+        document.getElementById('signupEmail').value
+      )">Sign Up</button>
     </div>
   </div>
 
-  <div id="homePage">
+  <div id="homePage" style="display: none;">
+    <div class="topBar">
+      <div class="avatarWrapper">
+        <img id="avatar" src="" alt="Avatar" />
+        <span>Avatar</span>
+        <div id="dropdownMenu" class="dropdown-content">
+          <button onclick="showAccountSettings()">Settings</button>
+          <button onclick="logout()">Logout</button>
+        </div>
+      </div>
+    </div>
     <h2>Welcome to the game</h2>
     <p>Game functions will appear here.</p>
 
-    <div id="accountSettings">
-      <h3>Change Avatar</h3>
-      <input type="file" id="avatarUpload"><br><br>
-      <button onclick="confirmAvatar()">Confirm</button>
-      <button onclick="goBack()">Back</button>
+    <div id="accountSettings" style="display: none;">
+      <input type="file" id="avatarUpload">
+      <button onclick="updateAvatarImage(document.getElementById('avatarUpload').files[0])">Confirm</button>
+      <br><br>
+      <button onclick="showHomePage()">Back</button>
       <button onclick="showHomePage()">Home</button>
     </div>
   </div>
 
-  <script src="gamelogic.js"></script>
+  <script src="GameLogic.js"></script>
   <script>
-    function switchTab(formId) {
-      document.querySelectorAll(".tab-content").forEach(el => el.classList.remove("active"));
-      document.querySelectorAll(".tab-header button").forEach(btn => btn.classList.remove("active"));
-      document.getElementById(formId).classList.add("active");
-      document.getElementById(formId === "loginForm" ? "loginTab" : "signupTab").classList.add("active");
-    }
+    // Tab switching
+    document.getElementById("loginTab").addEventListener("click", () => {
+      document.getElementById("loginTab").classList.add("active");
+      document.getElementById("signupTab").classList.remove("active");
+      document.getElementById("loginForm").classList.add("active");
+      document.getElementById("signupForm").classList.remove("active");
+    });
 
-    function handleSignup() {
-      const username = document.getElementById("signupUsername").value.trim();
-      const password = document.getElementById("signupPassword").value.trim();
-      const email = document.getElementById("signupEmail").value.trim();
-      if (!username || !password || !email) {
-        alert("All fields are required.");
-        return;
-      }
-      if (!signup(username, password, email)) {
-        alert("Username already taken.");
-      }
-    }
-
-    function handleLogin() {
-      const username = document.getElementById("loginUsername").value.trim();
-      const password = document.getElementById("loginPassword").value.trim();
-      if (!username || !password) {
-        alert("Both fields are required.");
-        return;
-      }
-      if (!login(username, password)) {
-        alert("Invalid credentials.");
-      }
-    }
-
-    function confirmAvatar() {
-      const file = document.getElementById("avatarUpload").files[0];
-      if (file) {
-        updateAvatarImage(file);
-      }
-    }
-
-    function goBack() {
-      document.getElementById("accountSettings").style.display = "none";
-      const mainHeader = document.querySelector("#homePage h2");
-      const mainParagraph = document.querySelector("#homePage p");
-      if (mainHeader && mainParagraph) {
-        mainHeader.textContent = "Welcome to the game";
-        mainParagraph.textContent = "Game functions will appear here.";
-      }
-    }
+    document.getElementById("signupTab").addEventListener("click", () => {
+      document.getElementById("signupTab").classList.add("active");
+      document.getElementById("loginTab").classList.remove("active");
+      document.getElementById("signupForm").classList.add("active");
+      document.getElementById("loginForm").classList.remove("active");
+    });
   </script>
 </body>
 </html>
