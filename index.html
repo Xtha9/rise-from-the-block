@@ -3,55 +3,45 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>My Game</title>
+  <title>Game App</title>
   <style>
     body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #1e1e1e;
+      background-color: #121212;
       color: white;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
     }
     #authContainer {
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      height: 100vh;
+      padding: 20px;
     }
     .tabs {
       display: flex;
-      margin-bottom: 1rem;
+      gap: 10px;
+      margin-bottom: 10px;
     }
-    .tabs button {
-      background-color: #333;
-      color: white;
-      border: none;
-      padding: 10px 20px;
+    .tab {
       cursor: pointer;
-      margin: 0 5px;
+      padding: 8px 16px;
+      background: #333;
+      border: 1px solid #555;
+      border-radius: 4px;
     }
-    .tabs button.active {
-      background-color: #555;
+    .tab.active {
+      background: #555;
     }
     .tab-content {
       display: none;
-      flex-direction: column;
-      gap: 10px;
     }
     .tab-content.active {
-      display: flex;
-    }
-    input {
-      padding: 8px;
-      width: 250px;
+      display: block;
     }
     #homePage {
       display: none;
       padding: 20px;
-    }
-    #avatarContainer {
-      position: relative;
-      display: inline-block;
     }
     #avatar {
       width: 50px;
@@ -63,33 +53,33 @@
       display: none;
       position: absolute;
       top: 60px;
-      left: 0;
-      background-color: #333;
-      color: white;
-      min-width: 150px;
-      box-shadow: 0px 8px 16px rgba(0,0,0,0.3);
-      z-index: 1;
-      border-radius: 6px;
-    }
-    #dropdownMenu button {
-      color: white;
-      background: none;
-      border: none;
-      padding: 12px 16px;
-      text-align: left;
-      width: 100%;
-      cursor: pointer;
-    }
-    #dropdownMenu button:hover {
-      background-color: #444;
+      left: 20px;
+      background: #222;
+      border: 1px solid #555;
+      padding: 10px;
+      z-index: 1000;
     }
     #accountSettings {
       display: none;
       margin-top: 20px;
     }
-    #confirmAvatarBtn {
-      margin-top: 10px;
+    button {
+      margin: 5px;
       padding: 6px 12px;
+      background-color: #444;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    input {
+      margin: 4px 0;
+      padding: 6px;
+      width: 200px;
+      background-color: #222;
+      color: white;
+      border: 1px solid #444;
+      border-radius: 4px;
     }
   </style>
 </head>
@@ -97,77 +87,57 @@
 
 <div id="authContainer">
   <div class="tabs">
-    <button id="loginTab" class="active">Log In</button>
-    <button id="signupTab">Sign Up</button>
+    <div id="loginTab" class="tab active">Login</div>
+    <div id="signupTab" class="tab">Sign Up</div>
   </div>
 
   <div id="loginForm" class="tab-content active">
-    <input type="text" id="loginUsername" placeholder="Username" />
-    <input type="password" id="loginPassword" placeholder="Password" />
-    <button onclick="login(document.getElementById('loginUsername').value, document.getElementById('loginPassword').value)">Log In</button>
+    <input type="text" id="loginUsername" placeholder="Username" /><br>
+    <input type="password" id="loginPassword" placeholder="Password" /><br>
+    <button onclick="login(document.getElementById('loginUsername').value, document.getElementById('loginPassword').value)">Login</button>
   </div>
 
   <div id="signupForm" class="tab-content">
-    <input type="email" id="signupEmail" placeholder="Email" />
-    <input type="text" id="signupUsername" placeholder="Username" />
-    <input type="password" id="signupPassword" placeholder="Password" />
+    <input type="email" id="signupEmail" placeholder="Email" /><br>
+    <input type="text" id="signupUsername" placeholder="Username" /><br>
+    <input type="password" id="signupPassword" placeholder="Password" /><br>
     <button onclick="signup(document.getElementById('signupUsername').value, document.getElementById('signupPassword').value, document.getElementById('signupEmail').value)">Sign Up</button>
   </div>
 </div>
 
 <div id="homePage">
-  <div id="avatarContainer">
-    <img id="avatar" src="" alt="Avatar">
-    <div id="dropdownMenu">
-      <button onclick="document.getElementById('accountSettings').style.display = 'block'">Account Settings</button>
-      <button onclick="logout()">Logout</button>
-    </div>
+  <img id="avatar" src="" alt="Avatar">
+  <div id="dropdownMenu">
+    <button onclick="document.getElementById('accountSettings').style.display = 'block'; this.parentElement.style.display='none';">Settings</button><br>
+    <button onclick="logout()">Logout</button>
   </div>
 
   <div id="accountSettings">
-    <input type="file" id="avatarUpload" />
-    <button id="confirmAvatarBtn">Confirm</button>
+    <input type="file" id="avatarUpload" accept="image/*" /><br>
+    <button onclick="updateAvatarImage(document.getElementById('avatarUpload').files[0])">Confirm</button><br>
+    <button onclick="document.getElementById('accountSettings').style.display = 'none';">Back</button>
+    <button onclick="showHomePage()">Home</button>
   </div>
 
-  <h1>Welcome to the Game Home Page!</h1>
-  <!-- Add game jobs and UI here -->
+  <h2>Welcome to the Game</h2>
+  <p>Game functionality will appear here (jobs, missions, stats, etc).</p>
 </div>
 
 <script src="gamelogic.js"></script>
 <script>
-  // Tab switch logic
   document.getElementById("loginTab").addEventListener("click", () => {
+    document.querySelector(".tab.active").classList.remove("active");
+    document.querySelector(".tab-content.active").classList.remove("active");
     document.getElementById("loginTab").classList.add("active");
-    document.getElementById("signupTab").classList.remove("active");
     document.getElementById("loginForm").classList.add("active");
-    document.getElementById("signupForm").classList.remove("active");
   });
 
   document.getElementById("signupTab").addEventListener("click", () => {
+    document.querySelector(".tab.active").classList.remove("active");
+    document.querySelector(".tab-content.active").classList.remove("active");
     document.getElementById("signupTab").classList.add("active");
-    document.getElementById("loginTab").classList.remove("active");
     document.getElementById("signupForm").classList.add("active");
-    document.getElementById("loginForm").classList.remove("active");
-  });
-
-  // Dropdown toggle
-  const avatar = document.getElementById("avatar");
-  const dropdown = document.getElementById("dropdownMenu");
-
-  if (avatar) {
-    avatar.addEventListener("click", () => {
-      dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
-    });
-  }
-
-  // Confirm avatar upload
-  document.getElementById("confirmAvatarBtn").addEventListener("click", () => {
-    const fileInput = document.getElementById("avatarUpload");
-    if (fileInput.files.length > 0) {
-      updateAvatarImage(fileInput.files[0]);
-    }
   });
 </script>
-
 </body>
 </html>
