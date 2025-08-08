@@ -73,6 +73,27 @@ function showHomePage() {
   }
   document.getElementById("accountSettings").style.display = "none";
   document.getElementById("dropdownMenu").style.display = "none";
+
+  // Update homepage content based on context
+  const mainHeader = document.querySelector("#homePage h2");
+  const mainParagraph = document.querySelector("#homePage p");
+  if (mainHeader && mainParagraph) {
+    mainHeader.textContent = "Welcome to the game";
+    mainParagraph.textContent = "Game functions will appear here.";
+  }
+}
+
+function showAccountSettings() {
+  document.getElementById("accountSettings").style.display = "block";
+  document.getElementById("dropdownMenu").style.display = "none";
+
+  // Change homepage text to reflect account settings context
+  const mainHeader = document.querySelector("#homePage h2");
+  const mainParagraph = document.querySelector("#homePage p");
+  if (mainHeader && mainParagraph) {
+    mainHeader.textContent = "Account Settings";
+    mainParagraph.textContent = "Upload avatar picture.";
+  }
 }
 
 // Load avatar and homepage on startup
