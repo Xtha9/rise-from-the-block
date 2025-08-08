@@ -1,69 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rise From the Block</title>
+  <style>
+    body {
+      background-color: black;
+      color: white;
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #111;
+      padding: 10px 20px;
+    }
+
+    #avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    #dropdownMenu {
+      display: none;
+      position: absolute;
+      top: 60px;
+      left: 20px;
+      background-color: #333;
+      border: 1px solid #666;
+      padding: 10px;
+      z-index: 10;
+    }
+
+    #dropdownMenu button {
+      display: block;
+      width: 100%;
+      background-color: #222;
+      border: none;
+      padding: 8px;
+      margin-bottom: 5px;
+      color: white;
+      cursor: pointer;
+    }
+
+    h1 {
+      margin: 0;
+      text-align: center;
+      flex: 1;
+    }
+
+    main {
+      padding: 20px;
+    }
+
+    #account-settings,
+    #login-form,
+    #signup-form,
+    #game-ui {
+      padding: 20px;
+    }
+
+    input, button {
+      background-color: #222;
+      color: white;
+      border: 1px solid #555;
+      padding: 8px;
+      margin: 5px 0;
+    }
+
+    h2, p, label {
+      color: white;
+    }
+  </style>
+</head>
 <body>
-  <h1 id="welcome-text" style="text-align: center;">Welcome to Rise from the Block</h1>
+  <header>
+    <img src="default-avatar.png" id="avatar" alt="Avatar">
+    <h1>Welcome to Rise From the Block</h1>
+  </header>
 
-  <!-- Login Form -->
-  <div id="login-form">
-    <h2>Login</h2>
-    <input type="text" id="login-username" placeholder="Username" />
-    <input type="password" id="login-password" placeholder="Password" />
-    <button id="loginBtn">Login</button>
+  <div id="dropdownMenu">
+    <button id="accountSettingsBtn">Account Settings</button>
+    <button id="logoutBtn">Logout</button>
   </div>
 
-  <!-- Signup Form -->
-  <div id="signup-form" style="display: none;">
-    <h2>Sign Up</h2>
-    <input type="text" id="signup-username" placeholder="Username" />
-    <input type="password" id="signup-password" placeholder="Password" />
-    <input type="email" id="signup-email" placeholder="Email" />
-    <button id="signupBtn">Sign Up</button>
-  </div>
-
-  <!-- Game UI -->
-  <div id="game-ui" style="display: none;">
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-      <!-- Avatar Icon with Dropdown -->
-      <div id="avatarIcon" style="
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        background-color: #ccc;
-        background-size: cover;
-        background-position: center;
-        cursor: pointer;
-        margin: 10px;
-      "></div>
-
-      <div id="dropdownMenu" style="
-        display: none;
-        flex-direction: column;
-        position: absolute;
-        top: 70px;
-        left: 10px;
-        background-color: white;
-        border: 1px solid #ccc;
-        padding: 10px;
-        z-index: 10;
-      ">
-        <button id="accountSettingsBtn">Account Settings</button>
-        <button onclick="location.reload()">Log Out</button>
-      </div>
+  <main>
+    <div id="login-form">
+      <!-- Login form elements -->
     </div>
 
-    <!-- Main gameplay placeholder -->
-    <div id="home-section">
-      <p>This is your home base. Start your journey here!</p>
+    <div id="signup-form">
+      <!-- Signup form elements -->
     </div>
-  </div>
 
-  <!-- Account Settings -->
-  <div id="account-settings" style="display: none;">
-    <h2>Account Settings</h2>
-    <input type="file" id="avatarInput" accept="image/*" />
-    <button id="confirmAvatarBtn">Confirm</button>
-    <br /><br />
-    <button id="backBtn">Back</button>
-    <button id="homeBtn">Home</button>
-  </div>
+    <div id="game-ui" style="display: none;">
+      <!-- Main game UI -->
+    </div>
+
+    <div id="account-settings" style="display: none;">
+      <h2>Account Settings</h2>
+      <input type="file" id="avatarUpload" accept="image/*">
+      <button id="confirmUpload">Confirm</button>
+      <button id="homeBtn">Home</button>
+      <button id="backBtn">Back</button>
+    </div>
+  </main>
 
   <script src="gamelogic.js"></script>
 </body>
+</html>
