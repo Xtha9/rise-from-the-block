@@ -35,7 +35,9 @@
 
     #game-ui {
       display: none;
-      margin-top: 30px;
+      height: 100vh;
+      background-color: black;
+      padding: 20px;
     }
 
     .section {
@@ -62,7 +64,7 @@
   <!-- SIGNUP FORM -->
   <div id="signup-form">
     <h2>Sign Up</h2>
-    <input id="signup-username" type="text" placeholder="Username (1-20 chars)" />
+    <input id="signup-username" type="text" placeholder="Username (1-40 chars)" />
     <input id="signup-password" type="password" placeholder="Password" />
     <input id="signup-email" type="email" placeholder="Email" />
     <button id="signupBtn">Sign Up</button>
@@ -70,33 +72,63 @@
 
   <!-- GAME UI -->
   <div id="game-ui">
-    <div class="section">
-      <h2>Dashboard</h2>
-      <p id="stats">Stats will go here...</p>
-      <button onclick="logout()">Logout</button>
-    </div>
-
-    <div class="section">
-      <h3>Job Selection</h3>
-      <!-- Job buttons go here -->
-    </div>
-
-    <div class="section">
-      <h3>Inventory</h3>
-      <!-- Inventory UI -->
-    </div>
-
-    <div class="section">
-      <h3>Chat / Global Feed</h3>
-      <!-- Chat system -->
-    </div>
+    <h2>Welcome to the Game!</h2>
+    <p>You are now logged in.</p>
+    <button onclick="logout()">Logout</button>
   </div>
 
-  <!-- Load Game Logic -->
-  <script src="GameLogic.js"></script>
-
-  <!-- Hook up buttons after script loads -->
   <script>
+    // Auto-create owner account
+    const ownerAccount = {
+      username: "X",
+      password: "SmileKid18$",
+      email: "sicrug@gmail.com",
+      role: "owner"
+    };
+    const existingUser = localStorage.getItem("user");
+    if (!existingUser) {
+      localStorage.setItem("user", JSON.stringify(ownerAccount));
+    }
+
+    function login(username, password) {
+      const savedUser = JSON.parse(localStorage.getItem("user"));
+      if (savedUser && savedUser.username === username && savedUser.password === password) {
+        localStorage.setItem("loggedIn", "true");
+        updateUI();
+      } else {
+        alert("Invalid username or password");
+      }
+    }
+
+    function signup(username, password, email) {
+      if (!username || !password || !email) {
+        alert("Please fill out all fields.");
+        return;
+      }
+
+      if (username.length < 1 || username.length > 40) {
+        alert("Username must be between 1 and 40 characters.");
+        return;
+      }
+
+      const user = { username, password, email };
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("loggedIn", "true");
+      updateUI();
+    }
+
+    function logout() {
+      localStorage.setItem("loggedIn", "false");
+      updateUI();
+    }
+
+    function updateUI() {
+      const isLoggedIn = localStorage.getItem("loggedIn") === "true";
+      document.getElementById("login-form").style.display = isLoggedIn ? "none" : "block";
+      document.getElementById("signup-form").style.display = isLoggedIn ? "none" : "block";
+      document.getElementById("game-ui").style.display = isLoggedIn ? "block" : "none";
+    }
+
     document.getElementById("loginBtn").onclick = () => {
       const username = document.getElementById("login-username").value.trim();
       const password = document.getElementById("login-password").value;
@@ -110,7 +142,6 @@
       signup(username, password, email);
     };
 
-    // Run this on load in case user already logged in
     window.onload = () => {
       updateUI();
     };
