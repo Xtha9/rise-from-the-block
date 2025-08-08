@@ -1,189 +1,173 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Game Login</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Game</title>
   <style>
     body {
       margin: 0;
       font-family: Arial, sans-serif;
       background-color: #1e1e1e;
-      color: #f0f0f0;
+      color: white;
     }
-
     #authContainer {
       display: flex;
       flex-direction: column;
       align-items: center;
-      margin-top: 100px;
+      justify-content: center;
+      height: 100vh;
     }
-
-    .tab-buttons {
-      margin-bottom: 20px;
+    .tabs {
+      display: flex;
+      margin-bottom: 1rem;
     }
-
-    .tab-buttons button {
-      margin: 0 10px;
-      padding: 10px 20px;
-      background: #333;
+    .tabs button {
+      background-color: #333;
       color: white;
       border: none;
+      padding: 10px 20px;
       cursor: pointer;
+      margin: 0 5px;
     }
-
+    .tabs button.active {
+      background-color: #555;
+    }
     .tab-content {
       display: none;
+      flex-direction: column;
+      gap: 10px;
     }
-
     .tab-content.active {
-      display: block;
+      display: flex;
     }
-
+    input {
+      padding: 8px;
+      width: 250px;
+    }
     #homePage {
       display: none;
       padding: 20px;
     }
-
-    #avatar-container {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+    #avatarContainer {
+      position: relative;
+      display: inline-block;
     }
-
     #avatar {
       width: 50px;
       height: 50px;
       border-radius: 50%;
       cursor: pointer;
     }
-
-    .dropdown {
-      position: relative;
-      display: inline-block;
-    }
-
-    .dropdown-content {
+    #dropdownMenu {
       display: none;
       position: absolute;
-      background-color: #2e2e2e;
-      min-width: 160px;
-      right: 0;
-      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.3);
+      top: 60px;
+      left: 0;
+      background-color: #333;
+      color: white;
+      min-width: 150px;
+      box-shadow: 0px 8px 16px rgba(0,0,0,0.3);
       z-index: 1;
+      border-radius: 6px;
     }
-
-    .dropdown-content a {
-      color: #f0f0f0;
-      padding: 12px 16px;
-      text-decoration: none;
-      display: block;
-    }
-
-    .dropdown:hover .dropdown-content {
-      display: block;
-    }
-
-    input {
-      margin: 5px;
-      padding: 10px;
-      background-color: #2c2c2c;
-      border: 1px solid #555;
-      color: #f0f0f0;
-    }
-
-    button {
-      margin: 5px;
-      padding: 10px 20px;
-      background-color: #444;
-      color: #fff;
+    #dropdownMenu button {
+      color: white;
+      background: none;
       border: none;
+      padding: 12px 16px;
+      text-align: left;
+      width: 100%;
       cursor: pointer;
+    }
+    #dropdownMenu button:hover {
+      background-color: #444;
+    }
+    #accountSettings {
+      display: none;
+      margin-top: 20px;
+    }
+    #confirmAvatarBtn {
+      margin-top: 10px;
+      padding: 6px 12px;
     }
   </style>
 </head>
 <body>
 
-  <div id="authContainer">
-    <div class="tab-buttons">
-      <button onclick="switchTab('loginTab')">Login</button>
-      <button onclick="switchTab('signupTab')">Sign Up</button>
-    </div>
+<div id="authContainer">
+  <div class="tabs">
+    <button id="loginTab" class="active">Log In</button>
+    <button id="signupTab">Sign Up</button>
+  </div>
 
-    <div id="loginTab" class="tab-content active">
-      <input type="text" id="loginUsername" placeholder="Username">
-      <input type="password" id="loginPassword" placeholder="Password">
-      <button onclick="handleLogin()">Login</button>
-    </div>
+  <div id="loginForm" class="tab-content active">
+    <input type="text" id="loginUsername" placeholder="Username" />
+    <input type="password" id="loginPassword" placeholder="Password" />
+    <button onclick="login(document.getElementById('loginUsername').value, document.getElementById('loginPassword').value)">Log In</button>
+  </div>
 
-    <div id="signupTab" class="tab-content">
-      <input type="email" id="signupEmail" placeholder="Email">
-      <input type="text" id="signupUsername" placeholder="Username">
-      <input type="password" id="signupPassword" placeholder="Password">
-      <button onclick="handleSignup()">Sign Up</button>
+  <div id="signupForm" class="tab-content">
+    <input type="email" id="signupEmail" placeholder="Email" />
+    <input type="text" id="signupUsername" placeholder="Username" />
+    <input type="password" id="signupPassword" placeholder="Password" />
+    <button onclick="signup(document.getElementById('signupUsername').value, document.getElementById('signupPassword').value, document.getElementById('signupEmail').value)">Sign Up</button>
+  </div>
+</div>
+
+<div id="homePage">
+  <div id="avatarContainer">
+    <img id="avatar" src="" alt="Avatar">
+    <div id="dropdownMenu">
+      <button onclick="document.getElementById('accountSettings').style.display = 'block'">Account Settings</button>
+      <button onclick="logout()">Logout</button>
     </div>
   </div>
 
-  <div id="homePage">
-    <div id="avatar-container">
-      <div class="dropdown">
-        <img id="avatar" src="" alt="Avatar">
-        <div class="dropdown-content">
-          <a href="#" onclick="document.getElementById('accountSettings').style.display='block'">Account Settings</a>
-          <a href="#" onclick="logout()">Logout</a>
-        </div>
-      </div>
-    </div>
-
-    <h2>Welcome to the Game Home!</h2>
-    <p>This is where your jobs and game UI will go.</p>
-
-    <div id="accountSettings" style="display: none;">
-      <h3>Account Settings</h3>
-      <input type="file" id="avatarInput">
-      <button onclick="confirmAvatarUpload()">Confirm Upload</button>
-      <button onclick="document.getElementById('accountSettings').style.display='none'">Back</button>
-    </div>
+  <div id="accountSettings">
+    <input type="file" id="avatarUpload" />
+    <button id="confirmAvatarBtn">Confirm</button>
   </div>
 
-  <script src="gamelogic.js"></script>
-  <script>
-    function switchTab(tabId) {
-      document.querySelectorAll(".tab-content").forEach(tab => tab.classList.remove("active"));
-      document.getElementById(tabId).classList.add("active");
-    }
+  <h1>Welcome to the Game Home Page!</h1>
+  <!-- Add game jobs and UI here -->
+</div>
 
-    function handleSignup() {
-      const username = document.getElementById("signupUsername").value;
-      const password = document.getElementById("signupPassword").value;
-      const email = document.getElementById("signupEmail").value;
-      if (!username || !password || !email) {
-        alert("All fields are required to sign up.");
-        return;
-      }
-      if (!signup(username, password, email)) {
-        alert("Username already exists.");
-      }
-    }
+<script src="gamelogic.js"></script>
+<script>
+  // Tab switch logic
+  document.getElementById("loginTab").addEventListener("click", () => {
+    document.getElementById("loginTab").classList.add("active");
+    document.getElementById("signupTab").classList.remove("active");
+    document.getElementById("loginForm").classList.add("active");
+    document.getElementById("signupForm").classList.remove("active");
+  });
 
-    function handleLogin() {
-      const username = document.getElementById("loginUsername").value;
-      const password = document.getElementById("loginPassword").value;
-      if (!username || !password) {
-        alert("Username and password required.");
-        return;
-      }
-      if (!login(username, password)) {
-        alert("Invalid username or password.");
-      }
-    }
+  document.getElementById("signupTab").addEventListener("click", () => {
+    document.getElementById("signupTab").classList.add("active");
+    document.getElementById("loginTab").classList.remove("active");
+    document.getElementById("signupForm").classList.add("active");
+    document.getElementById("loginForm").classList.remove("active");
+  });
 
-    function confirmAvatarUpload() {
-      const file = document.getElementById("avatarInput").files[0];
-      if (file) {
-        updateAvatarImage(file);
-        document.getElementById("accountSettings").style.display = "none";
-      }
+  // Dropdown toggle
+  const avatar = document.getElementById("avatar");
+  const dropdown = document.getElementById("dropdownMenu");
+
+  if (avatar) {
+    avatar.addEventListener("click", () => {
+      dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+    });
+  }
+
+  // Confirm avatar upload
+  document.getElementById("confirmAvatarBtn").addEventListener("click", () => {
+    const fileInput = document.getElementById("avatarUpload");
+    if (fileInput.files.length > 0) {
+      updateAvatarImage(fileInput.files[0]);
     }
-  </script>
+  });
+</script>
+
 </body>
 </html>
