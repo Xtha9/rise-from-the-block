@@ -1,124 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Rise from the Block</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #111;
-      color: #fff;
-    }
-
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #222;
-      padding: 10px 20px;
-    }
-
-    #avatarIcon {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background-color: #555;
-      background-size: cover;
-      background-position: center;
-      cursor: pointer;
-    }
-
-    #title {
-      text-align: center;
-      flex-grow: 1;
-      font-size: 1.4em;
-      font-weight: bold;
-    }
-
-    .dropdown {
-      position: absolute;
-      top: 60px;
-      left: 10px;
-      background: #333;
-      border: 1px solid #444;
-      display: none;
-      flex-direction: column;
-      z-index: 10;
-    }
-
-    .dropdown button {
-      background: none;
-      color: white;
-      border: none;
-      padding: 10px;
-      text-align: left;
-      cursor: pointer;
-    }
-
-    .dropdown button:hover {
-      background: #444;
-    }
-
-    #account-settings {
-      display: none;
-      padding: 20px;
-    }
-
-    #account-settings input[type="file"] {
-      display: block;
-      margin: 10px 0;
-    }
-
-    #game-ui {
-      display: none;
-      padding: 20px;
-    }
-
-    .form-section {
-      padding: 20px;
-    }
-
-    .form-section input {
-      display: block;
-      margin-bottom: 10px;
-      padding: 8px;
-    }
-
-    .form-section button {
-      padding: 8px 16px;
-      background-color: #007bff;
-      border: none;
-      color: white;
-      cursor: pointer;
-    }
-
-    .form-section button:hover {
-      background-color: #0056b3;
-    }
-  </style>
-</head>
 <body>
-  <header>
-    <div id="avatarIcon"></div>
-    <div id="title">Welcome to Rise from the Block</div>
-  </header>
+  <h1 id="welcome-text" style="text-align: center;">Welcome to Rise from the Block</h1>
 
-  <div class="dropdown" id="dropdownMenu">
-    <button id="accountSettingsBtn">Account Settings</button>
-    <button id="logoutBtn">Logout</button>
-  </div>
-
-  <div class="form-section" id="login-form">
+  <!-- Login Form -->
+  <div id="login-form">
     <h2>Login</h2>
     <input type="text" id="login-username" placeholder="Username" />
     <input type="password" id="login-password" placeholder="Password" />
     <button id="loginBtn">Login</button>
   </div>
 
-  <div class="form-section" id="signup-form">
+  <!-- Signup Form -->
+  <div id="signup-form" style="display: none;">
     <h2>Sign Up</h2>
     <input type="text" id="signup-username" placeholder="Username" />
     <input type="password" id="signup-password" placeholder="Password" />
@@ -126,17 +18,52 @@
     <button id="signupBtn">Sign Up</button>
   </div>
 
-  <div id="game-ui">
-    <p>Main game area here.</p>
+  <!-- Game UI -->
+  <div id="game-ui" style="display: none;">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <!-- Avatar Icon with Dropdown -->
+      <div id="avatarIcon" style="
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background-color: #ccc;
+        background-size: cover;
+        background-position: center;
+        cursor: pointer;
+        margin: 10px;
+      "></div>
+
+      <div id="dropdownMenu" style="
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 70px;
+        left: 10px;
+        background-color: white;
+        border: 1px solid #ccc;
+        padding: 10px;
+        z-index: 10;
+      ">
+        <button id="accountSettingsBtn">Account Settings</button>
+        <button onclick="location.reload()">Log Out</button>
+      </div>
+    </div>
+
+    <!-- Main gameplay placeholder -->
+    <div id="home-section">
+      <p>This is your home base. Start your journey here!</p>
+    </div>
   </div>
 
-  <div id="account-settings">
+  <!-- Account Settings -->
+  <div id="account-settings" style="display: none;">
     <h2>Account Settings</h2>
     <input type="file" id="avatarInput" accept="image/*" />
-    <button id="confirmAvatarBtn">Confirm Avatar</button>
+    <button id="confirmAvatarBtn">Confirm</button>
+    <br /><br />
     <button id="backBtn">Back</button>
+    <button id="homeBtn">Home</button>
   </div>
 
   <script src="gamelogic.js"></script>
 </body>
-</html>
