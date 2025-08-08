@@ -1,70 +1,85 @@
-// Helper to get users from localStorage
-function getUsers() {
-  return JSON.parse(localStorage.getItem("users")) || [];
-}
+document.addEventListener("DOMContentLoaded", function () {
+  const loginForm = document.getElementById("login-form");
+  const signupForm = document.getElementById("signup-form");
+  const gameUI = document.getElementById("game-ui");
 
-// Helper to save users to localStorage
-function saveUsers(users) {
-  localStorage.setItem("users", JSON.stringify(users));
-}
+  const loginBtn = document.getElementById("loginBtn");
+  const signupBtn = document.getElementById("signupBtn");
 
-// Handle signup
-document.getElementById("signupBtn").addEventListener("click", () => {
-  const username = document.getElementById("signup-username").value.trim();
-  const password = document.getElementById("signup-password").value.trim();
-  const email = document.getElementById("signup-email").value.trim();
+  const loginUsername = document.getElementById("login-username");
+  const loginPassword = document.getElementById("login-password");
 
-  if (!username || !password || !email) {
-    alert("Please fill out all fields.");
-    return;
-  }
+  const signupUsername = document.getElementById("signup-username");
+  const signupPassword = document.getElementById("signup-password");
+  const signupEmail = document.getElementById("signup-email");
 
-  const users = getUsers();
-  const existingUser = users.find(u => u.username === username);
+  function showGameUI(user) {
+    loginForm.style.display = "none";
+    signupForm.style.display = "none";
+    gameUI.style.display = "block";
 
-  if (existingUser) {
-    alert("Username already exists.");
-    return;
-  }
-
-  const newUser = { username, password, email, avatar: "" };
-  users.push(newUser);
-  saveUsers(users);
-  alert("Signup successful! You can now log in.");
-});
-
-// Handle login
-document.getElementById("loginBtn").addEventListener("click", () => {
-  const username = document.getElementById("login-username").value.trim();
-  const password = document.getElementById("login-password").value.trim();
-
-  const users = getUsers();
-  const user = users.find(u => u.username === username && u.password === password);
-
-  if (user) {
-    localStorage.setItem("loggedInUser", JSON.stringify(user));
-    document.getElementById("login-form").style.display = "none";
-    document.getElementById("signup-form").style.display = "none";
-    document.getElementById("game-ui").style.display = "block";
-
+    const avatarIcon = document.getElementById("avatarIcon");
     if (user.avatar) {
-      document.getElementById("avatarIcon").style.backgroundImage = `url(${user.avatar})`;
+      avatarIcon.style.backgroundImage = `url(${user.avatar})`;
+    } else {
+      avatarIcon.style.backgroundImage = "none";
     }
-  } else {
-    alert("Invalid login credentials");
   }
-});
 
-// Auto-login if user already stored
-window.addEventListener("DOMContentLoaded", () => {
-  const user = JSON.parse(localStorage.getItem("loggedInUser"));
-  if (user) {
-    document.getElementById("login-form").style.display = "none";
-    document.getElementById("signup-form").style.display = "none";
-    document.getElementById("game-ui").style.display = "block";
-
-    if (user.avatar) {
-      document.getElementById("avatarIcon").style.backgroundImage = `url(${user.avatar})`;
+  function getStoredUsers() {
+    try {
+      const data = JSON.parse(localStorage.getItem("users"));
+      return Array.isArray(data) ? data : [];
+    } catch (e) {
+      console.warn("Corrupted users data in localStorage. Resetting.");
+      localStorage.removeItem("users");
+      return [];
     }
+  }
+
+  loginBtn.addEventListener("click", function () {
+    const username = loginUsername.value.trim();
+    const password = loginPassword.value.trim();
+
+    const users = getStoredUsers();
+    const foundUser = users.find(
+      (user) => user.username === username && user.password === password
+    );
+
+    if (foundUser) {
+      localStorage.setItem("loggedInUser", JSON.stringify(foundUser));
+      showGameUI(foundUser);
+    } else {
+      alert("Invalid login credentials");
+    }
+  });
+
+  signupBtn.addEventListener("click", function () {
+    const username = signupUsername.value.trim();
+    const password = signupPassword.value.trim();
+    const email = signupEmail.value.trim();
+
+    if (!username || !password || !email) {
+      alert("Please fill out all fields");
+      return;
+    }
+
+    let users = getStoredUsers();
+
+    if (users.some((user) => user.username === username)) {
+      alert("Username already exists");
+      return;
+    }
+
+    const newUser = { username, password, email, avatar: "" };
+    users.push(newUser);
+    localStorage.setItem("users", JSON.stringify(users));
+    localStorage.setItem("loggedInUser", JSON.stringify(newUser));
+    showGameUI(newUser);
+  });
+
+  const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+  if (loggedInUser) {
+    showGameUI(loggedInUser);
   }
 });
