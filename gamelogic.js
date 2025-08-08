@@ -15,7 +15,7 @@ function signup(username, password, email) {
     username,
     password,
     email,
-    avatar: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIA..." // default Base64 avatar
+    avatar: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIA..."
   };
   users.push(newUser);
   saveUsers();
@@ -42,6 +42,7 @@ function logout() {
   document.getElementById("homePage").style.display = "none";
   document.getElementById("authContainer").style.display = "flex";
   document.querySelector(".tab-content.active").classList.remove("active");
+  document.getElementById("loginForm").classList.add("active");
   document.getElementById("loginTab").classList.add("active");
 }
 
@@ -70,6 +71,8 @@ function showHomePage() {
     const avatarImg = document.getElementById("avatar");
     if (avatarImg) avatarImg.src = currentUser.avatar;
   }
+  document.getElementById("accountSettings").style.display = "none";
+  document.getElementById("dropdownMenu").style.display = "none";
 }
 
 // Load avatar and homepage on startup
@@ -78,5 +81,29 @@ window.addEventListener("DOMContentLoaded", () => {
     showHomePage();
   } else {
     document.getElementById("authContainer").style.display = "flex";
+  }
+});
+
+// Hide dropdown when mouse leaves the avatar or dropdown
+window.addEventListener("DOMContentLoaded", () => {
+  const avatar = document.getElementById("avatar");
+  const dropdown = document.getElementById("dropdownMenu");
+
+  if (avatar && dropdown) {
+    avatar.addEventListener("mouseenter", () => {
+      dropdown.style.display = "block";
+    });
+
+    avatar.addEventListener("mouseleave", () => {
+      setTimeout(() => {
+        if (!dropdown.matches(":hover")) {
+          dropdown.style.display = "none";
+        }
+      }, 300);
+    });
+
+    dropdown.addEventListener("mouseleave", () => {
+      dropdown.style.display = "none";
+    });
   }
 });
