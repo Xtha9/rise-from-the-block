@@ -5,12 +5,35 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rise from the Block</title>
   <style>
-    body { font-family: Arial, sans-serif; background: #222; color: #fff; margin: 0; padding: 0; }
-    #game-ui { display: none; padding: 20px; }
-    .hud { position: relative; background: #000; padding: 10px; display: flex; justify-content: space-between; align-items: center; }
-    #logoutBtn { color: red; cursor: pointer; text-decoration: underline; }
-    #user-display { font-size: 14px; }
-    .avatar-container { position: absolute; top: 10px; left: 10px; cursor: pointer; }
+    body {
+      font-family: Arial, sans-serif;
+      background: #222;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+    }
+
+    #game-ui {
+      display: none;
+      padding: 20px;
+    }
+
+    .hud {
+      position: relative;
+      background: #000;
+      padding: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .avatar-container {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      cursor: pointer;
+    }
+
     #avatarIcon {
       width: 40px;
       height: 40px;
@@ -19,9 +42,49 @@
       background-position: center;
       background-color: #555;
     }
-    .dropdown { display: none; position: absolute; top: 50px; left: 0; background: #333; padding: 10px; border-radius: 5px; }
-    .dropdown a { color: white; display: block; margin-bottom: 5px; cursor: pointer; }
-    #account-settings { display: none; padding: 20px; background: #111; }
+
+    .dropdown {
+      display: none;
+      position: absolute;
+      top: 50px;
+      left: 0;
+      background: #333;
+      padding: 10px;
+      border-radius: 5px;
+    }
+
+    .dropdown a {
+      color: white;
+      display: block;
+      margin-bottom: 5px;
+      cursor: pointer;
+    }
+
+    .title-container {
+      text-align: center;
+    }
+
+    .game-title {
+      margin: 0;
+      font-size: 20px;
+      color: #fff;
+    }
+
+    #account-settings {
+      display: none;
+      padding: 20px;
+      background: #111;
+    }
+
+    .nav-buttons {
+      margin-top: 10px;
+    }
+
+    .nav-buttons button {
+      margin-right: 10px;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -49,13 +112,19 @@
           <a id="logoutBtn">Logout</a>
         </div>
       </div>
-      <div><h2>Welcome to Rise from the Block</h2></div>
+      <div class="title-container">
+        <h2 class="game-title">Welcome to Rise from the Block</h2>
+      </div>
     </div>
 
     <div id="account-settings">
       <h3>Account Settings</h3>
       <input type="file" id="avatarUpload" accept="image/*" />
       <button id="avatarConfirmBtn">Confirm</button>
+      <div class="nav-buttons">
+        <button id="backBtn">Back</button>
+        <button id="homeBtn">Home</button>
+      </div>
     </div>
   </div>
 
@@ -63,6 +132,7 @@
   <script>
     const avatarIcon = document.getElementById("avatarIcon");
     const dropdown = document.getElementById("avatarDropdown");
+
     avatarIcon.addEventListener("click", () => {
       dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
     });
@@ -99,7 +169,15 @@
       }
     });
 
-    // On page load, show avatar if available
+    document.getElementById("backBtn").addEventListener("click", () => {
+      document.getElementById("account-settings").style.display = "none";
+    });
+
+    document.getElementById("homeBtn").addEventListener("click", () => {
+      document.getElementById("account-settings").style.display = "none";
+      // Add logic later to show different views
+    });
+
     window.addEventListener("DOMContentLoaded", () => {
       const currentUser = JSON.parse(localStorage.getItem("loggedInUser"));
       if (currentUser && currentUser.avatar) {
