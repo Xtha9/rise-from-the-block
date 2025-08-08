@@ -1,70 +1,69 @@
-// =========================
-// GameLogic.js (Fresh Version for Rise from the Block)
-// =========================
+// Auto-create owner account
+const ownerAccount = {
+  username: "X",
+  password: "SmileKid18$",
+  email: "sicrug@gmail.com",
+  role: "owner"
+};
 
-// LocalStorage-based user system
-const users = JSON.parse(localStorage.getItem("users")) || {};
-let currentUser = JSON.parse(localStorage.getItem("currentUser")) || null;
-
-function saveUsers() {
-  localStorage.setItem("users", JSON.stringify(users));
-}
-
-function saveCurrentUser() {
-  localStorage.setItem("currentUser", JSON.stringify(currentUser));
-}
-
-function logout() {
-  currentUser = null;
-  localStorage.removeItem("currentUser");
-  updateUI();
+const existingUser = localStorage.getItem("user");
+if (!existingUser) {
+  localStorage.setItem("user", JSON.stringify(ownerAccount));
 }
 
 function login(username, password) {
-  if (!users[username]) return alert("User not found.");
-  if (users[username].password !== password) return alert("Incorrect password.");
-  currentUser = users[username];
-  saveCurrentUser();
-  updateUI();
-}
-
-function signup(username, password, email) {
-  if (users[username]) return alert("Username already taken.");
-  if (username.length < 1 || username.length > 20) return alert("Username must be 1-20 characters.");
-
-  users[username] = {
-    email,
-    password
-  };
-
-  saveUsers();
-  login(username, password);
-}
-
-function updateUI() {
-  const gameUI = document.getElementById("game-ui");
-  const loginForm = document.getElementById("login-form");
-  const signupForm = document.getElementById("signup-form");
-  const userDisplay = document.getElementById("user-display");
-
-  if (currentUser) {
-    if (gameUI) gameUI.style.display = "block";
-    if (loginForm) loginForm.style.display = "none";
-    if (signupForm) signupForm.style.display = "none";
-    if (userDisplay) userDisplay.innerText = `Welcome, ${getUsernameByUser(currentUser)}!`;
+  const savedUser = JSON.parse(localStorage.getItem("user"));
+  if (savedUser && savedUser.username === username && savedUser.password === password) {
+    localStorage.setItem("loggedIn", "true");
+    updateUI();
   } else {
-    if (gameUI) gameUI.style.display = "none";
-    if (loginForm) loginForm.style.display = "block";
-    if (signupForm) signupForm.style.display = "block";
-    if (userDisplay) userDisplay.innerText = "";
+    alert("Invalid username or password");
   }
 }
 
-function getUsernameByUser(userObj) {
-  return Object.keys(users).find((key) => users[key].email === userObj.email) || "";
+function signup(username, password, email) {
+  if (!username || !password || !email) {
+    alert("Please fill out all fields.");
+    return;
+  }
+
+  if (username.length < 1 || username.length > 40) {
+    alert("Username must be between 1 and 40 characters.");
+    return;
+  }
+
+  const user = { username, password, email };
+  localStorage.setItem("user", JSON.stringify(user));
+  localStorage.setItem("loggedIn", "true");
+  updateUI();
 }
 
-// On page load, check for saved session
+function logout() {
+  localStorage.setItem("loggedIn", "false");
+  updateUI();
+}
+
+function updateUI() {
+  const isLoggedIn = localStorage.getItem("loggedIn") === "true";
+  document.getElementById("login-form").style.display = isLoggedIn ? "none" : "block";
+  document.getElementById("signup-form").style.display = isLoggedIn ? "none" : "block";
+  document.getElementById("game-ui").style.display = isLoggedIn ? "block" : "none";
+}
+
+// Hook up UI on load
 window.onload = () => {
+  document.getElementById("loginBtn").onclick = () => {
+    const username = document.getElementById("login-username").value.trim();
+    const password = document.getElementById("login-password").value;
+    login(username, password);
+  };
+
+  document.getElementById("signupBtn").onclick = () => {
+    const username = document.getElementById("signup-username").value.trim();
+    const password = document.getElementById("signup-password").value;
+    const email = document.getElementById("signup-email").value.trim();
+    signup(username, password, email);
+  };
+
   updateUI();
 };
