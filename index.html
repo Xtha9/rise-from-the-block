@@ -76,6 +76,36 @@
       localStorage.removeItem("loggedInUser");
       location.reload();
     });
+
+    document.getElementById("avatarConfirmBtn").addEventListener("click", () => {
+      const fileInput = document.getElementById("avatarUpload");
+      const file = fileInput.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const imageDataUrl = e.target.result;
+          let currentUser = JSON.parse(localStorage.getItem("loggedInUser"));
+          currentUser.avatar = imageDataUrl;
+          localStorage.setItem("loggedInUser", JSON.stringify(currentUser));
+
+          let users = JSON.parse(localStorage.getItem("users")) || [];
+          users = users.map(user => user.username === currentUser.username ? currentUser : user);
+          localStorage.setItem("users", JSON.stringify(users));
+
+          avatarIcon.style.backgroundImage = `url(${imageDataUrl})`;
+          document.getElementById("account-settings").style.display = "none";
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // On page load, show avatar if available
+    window.addEventListener("DOMContentLoaded", () => {
+      const currentUser = JSON.parse(localStorage.getItem("loggedInUser"));
+      if (currentUser && currentUser.avatar) {
+        avatarIcon.style.backgroundImage = `url(${currentUser.avatar})`;
+      }
+    });
   </script>
 </body>
 </html>
