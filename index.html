@@ -3,65 +3,61 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Rise from the Block</title>
+  <title>Rise From the Block</title>
   <style>
     body {
       margin: 0;
-      background: black;
-      color: white;
       font-family: Arial, sans-serif;
+      background-color: black;
+      color: white;
     }
-
-    #logout-container {
+    #login-form, #signup-form {
+      margin: 20px;
+    }
+    #game-ui {
+      display: none;
+      padding: 20px;
+    }
+    #logoutBtn {
       position: absolute;
       top: 10px;
       right: 10px;
-    }
-
-    #logoutBtn {
-      padding: 6px 12px;
-      font-weight: bold;
+      padding: 10px 15px;
+      background-color: red;
+      border: none;
+      color: white;
       cursor: pointer;
-    }
-
-    #game-ui {
-      padding: 20px;
-      max-width: 600px;
-      margin: 80px auto 0 auto;
-      background: #111;
-      border-radius: 10px;
-      box-shadow: 0 0 10px #333;
     }
   </style>
 </head>
 <body>
+  <h1>Rise From the Block</h1>
 
   <!-- Login Form -->
   <div id="login-form">
-    <input type="text" id="login-username" placeholder="Username" />
-    <input type="password" id="login-password" placeholder="Password" />
+    <h2>Login</h2>
+    <input type="text" id="login-username" placeholder="Username"><br>
+    <input type="password" id="login-password" placeholder="Password"><br>
     <button id="loginBtn">Log In</button>
   </div>
 
   <!-- Signup Form -->
   <div id="signup-form">
-    <input type="text" id="signup-username" placeholder="Username (1–40 chars)" />
-    <input type="email" id="signup-email" placeholder="Email" />
-    <input type="password" id="signup-password" placeholder="Password" />
+    <h2>Sign Up</h2>
+    <input type="text" id="signup-username" placeholder="Username"><br>
+    <input type="password" id="signup-password" placeholder="Password"><br>
+    <input type="email" id="signup-email" placeholder="Email"><br>
     <button id="signupBtn">Sign Up</button>
   </div>
 
   <!-- Game UI -->
-  <div id="game-ui" style="display: none;">
-    <div id="logout-container">
-      <button id="logoutBtn" onclick="logout()">Log Out</button>
-    </div>
-
-    <h2 id="user-display"></h2>
-    <p>Welcome to Rise from the Block!</p>
-    <!-- More game UI goes here -->
+  <div id="game-ui">
+    <div id="user-display"></div>
+    <p>Welcome to the game.</p>
+    <button id="logoutBtn" onclick="logout()">Log Out</button>
   </div>
 
+  <!-- Load the logic file -->
   <script src="GameLogic.js"></script>
 </body>
 </html>
