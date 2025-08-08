@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Game App</title>
+  <title>Project Game</title>
   <style>
     body {
       background-color: #121212;
@@ -12,36 +12,35 @@
       margin: 0;
       padding: 0;
     }
-    #authContainer {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+    #authContainer, #homePage {
+      display: none;
       padding: 20px;
     }
-    .tabs {
+    .tab-header {
       display: flex;
       gap: 10px;
-      margin-bottom: 10px;
     }
-    .tab {
+    .tab-header button {
+      padding: 10px;
+      background-color: #222;
+      color: white;
+      border: none;
       cursor: pointer;
-      padding: 8px 16px;
-      background: #333;
-      border: 1px solid #555;
-      border-radius: 4px;
     }
-    .tab.active {
-      background: #555;
+    .tab-header button.active {
+      background-color: #444;
     }
     .tab-content {
       display: none;
+      margin-top: 10px;
     }
     .tab-content.active {
       display: block;
     }
-    #homePage {
-      display: none;
-      padding: 20px;
+    #avatarContainer {
+      position: absolute;
+      top: 10px;
+      right: 10px;
     }
     #avatar {
       width: 50px;
@@ -50,94 +49,127 @@
       cursor: pointer;
     }
     #dropdownMenu {
-      display: none;
       position: absolute;
+      right: 10px;
       top: 60px;
-      left: 20px;
-      background: #222;
-      border: 1px solid #555;
+      background-color: #222;
+      border: 1px solid #444;
+      display: none;
+      z-index: 100;
+    }
+    #dropdownMenu button {
+      display: block;
+      width: 100%;
       padding: 10px;
-      z-index: 1000;
+      background: none;
+      color: white;
+      border: none;
+      text-align: left;
+      cursor: pointer;
+    }
+    #dropdownMenu button:hover {
+      background-color: #333;
     }
     #accountSettings {
       display: none;
       margin-top: 20px;
     }
-    button {
-      margin: 5px;
-      padding: 6px 12px;
-      background-color: #444;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    input {
-      margin: 4px 0;
-      padding: 6px;
-      width: 200px;
-      background-color: #222;
-      color: white;
-      border: 1px solid #444;
-      border-radius: 4px;
-    }
   </style>
 </head>
 <body>
-
-<div id="authContainer">
-  <div class="tabs">
-    <div id="loginTab" class="tab active">Login</div>
-    <div id="signupTab" class="tab">Sign Up</div>
+  <div id="avatarContainer">
+    <img id="avatar" src="" alt="Avatar">
+    <div id="dropdownMenu">
+      <button onclick="showAccountSettings()">Settings</button>
+      <button onclick="logout()">Logout</button>
+    </div>
   </div>
 
-  <div id="loginForm" class="tab-content active">
-    <input type="text" id="loginUsername" placeholder="Username" /><br>
-    <input type="password" id="loginPassword" placeholder="Password" /><br>
-    <button onclick="login(document.getElementById('loginUsername').value, document.getElementById('loginPassword').value)">Login</button>
+  <div id="authContainer">
+    <div class="tab-header">
+      <button id="loginTab" class="active" onclick="switchTab('loginForm')">Login</button>
+      <button id="signupTab" onclick="switchTab('signupForm')">Sign Up</button>
+    </div>
+
+    <div id="loginForm" class="tab-content active">
+      <h2>Login</h2>
+      <input type="text" id="loginUsername" placeholder="Username"><br><br>
+      <input type="password" id="loginPassword" placeholder="Password"><br><br>
+      <button onclick="handleLogin()">Login</button>
+    </div>
+
+    <div id="signupForm" class="tab-content">
+      <h2>Sign Up</h2>
+      <input type="text" id="signupEmail" placeholder="Email"><br><br>
+      <input type="text" id="signupUsername" placeholder="Username"><br><br>
+      <input type="password" id="signupPassword" placeholder="Password"><br><br>
+      <button onclick="handleSignup()">Sign Up</button>
+    </div>
   </div>
 
-  <div id="signupForm" class="tab-content">
-    <input type="email" id="signupEmail" placeholder="Email" /><br>
-    <input type="text" id="signupUsername" placeholder="Username" /><br>
-    <input type="password" id="signupPassword" placeholder="Password" /><br>
-    <button onclick="signup(document.getElementById('signupUsername').value, document.getElementById('signupPassword').value, document.getElementById('signupEmail').value)">Sign Up</button>
-  </div>
-</div>
+  <div id="homePage">
+    <h2>Welcome to the game</h2>
+    <p>Game functions will appear here.</p>
 
-<div id="homePage">
-  <img id="avatar" src="" alt="Avatar">
-  <div id="dropdownMenu">
-    <button onclick="document.getElementById('accountSettings').style.display = 'block'; this.parentElement.style.display='none';">Settings</button><br>
-    <button onclick="logout()">Logout</button>
+    <div id="accountSettings">
+      <h3>Change Avatar</h3>
+      <input type="file" id="avatarUpload"><br><br>
+      <button onclick="confirmAvatar()">Confirm</button>
+      <button onclick="goBack()">Back</button>
+      <button onclick="showHomePage()">Home</button>
+    </div>
   </div>
 
-  <div id="accountSettings">
-    <input type="file" id="avatarUpload" accept="image/*" /><br>
-    <button onclick="updateAvatarImage(document.getElementById('avatarUpload').files[0])">Confirm</button><br>
-    <button onclick="document.getElementById('accountSettings').style.display = 'none';">Back</button>
-    <button onclick="showHomePage()">Home</button>
-  </div>
+  <script src="gamelogic.js"></script>
+  <script>
+    function switchTab(formId) {
+      document.querySelectorAll(".tab-content").forEach(el => el.classList.remove("active"));
+      document.querySelectorAll(".tab-header button").forEach(btn => btn.classList.remove("active"));
+      document.getElementById(formId).classList.add("active");
+      document.getElementById(formId === "loginForm" ? "loginTab" : "signupTab").classList.add("active");
+    }
 
-  <h2>Welcome to the Game</h2>
-  <p>Game functionality will appear here (jobs, missions, stats, etc).</p>
-</div>
+    function handleSignup() {
+      const username = document.getElementById("signupUsername").value.trim();
+      const password = document.getElementById("signupPassword").value.trim();
+      const email = document.getElementById("signupEmail").value.trim();
+      if (!username || !password || !email) {
+        alert("All fields are required.");
+        return;
+      }
+      if (!signup(username, password, email)) {
+        alert("Username already taken.");
+      }
+    }
 
-<script src="gamelogic.js"></script>
-<script>
-  document.getElementById("loginTab").addEventListener("click", () => {
-    document.querySelector(".tab.active").classList.remove("active");
-    document.querySelector(".tab-content.active").classList.remove("active");
-    document.getElementById("loginTab").classList.add("active");
-    document.getElementById("loginForm").classList.add("active");
-  });
+    function handleLogin() {
+      const username = document.getElementById("loginUsername").value.trim();
+      const password = document.getElementById("loginPassword").value.trim();
+      if (!username || !password) {
+        alert("Both fields are required.");
+        return;
+      }
+      if (!login(username, password)) {
+        alert("Invalid credentials.");
+      }
+    }
 
-  document.getElementById("signupTab").addEventListener("click", () => {
-    document.querySelector(".tab.active").classList.remove("active");
-    document.querySelector(".tab-content.active").classList.remove("active");
-    document.getElementById("signupTab").classList.add("active");
-    document.getElementById("signupForm").classList.add("active");
-  });
-</script>
+    function confirmAvatar() {
+      const file = document.getElementById("avatarUpload").files[0];
+      if (file) {
+        updateAvatarImage(file);
+      }
+    }
+
+    function goBack() {
+      document.getElementById("accountSettings").style.display = "none";
+      const mainHeader = document.querySelector("#homePage h2");
+      const mainParagraph = document.querySelector("#homePage p");
+      if (mainHeader && mainParagraph) {
+        mainHeader.textContent = "Welcome to the game";
+        mainParagraph.textContent = "Game functions will appear here.";
+      }
+    }
+  </script>
 </body>
 </html>
